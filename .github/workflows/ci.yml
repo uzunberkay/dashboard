@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: tuna
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d tuna"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/tuna?schema=public
+      DIRECT_URL: postgresql://postgres:postgres@localhost:5432/tuna?schema=public
+      NEXTAUTH_SECRET: ci-nextauth-secret-with-sufficient-length
+      NEXTAUTH_URL: http://localhost:3000
+      APP_ENV: staging
+      ENABLE_DEMO_SEED: false
+      RATE_LIMIT_LOGIN_MAX: 5
+      RATE_LIMIT_LOGIN_WINDOW_MS: 600000
+      RATE_LIMIT_MUTATION_MAX: 60
+      RATE_LIMIT_MUTATION_WINDOW_MS: 60000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate env
+        run: npm run env:check
+
+      - name: Apply migrations
+        run: npm run db:deploy
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build

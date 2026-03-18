@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  password     String
+  name         String
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+  categories   Category[]
+  goals        Goal[]
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  name         String
+  icon         String?
+  budgetLimit  Float?
+  sortOrder    Int           @default(0)
+  isSystem     Boolean       @default(false)
+  parentId     String?
+  parent       Category?     @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children     Category[]    @relation("CategoryHierarchy")
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  goals        Goal[]
+
+  @@unique([name, userId, parentId])
+  @@index([userId, parentId, sortOrder])
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  type        String
+  amount      Float
+  description String?
+  date        DateTime
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@index([userId, date])
+  @@index([userId, type, date])
+  @@index([categoryId, date])
+}
+
+model Goal {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Hedef kapsamı: toplam bakiye mi kategori mi
+  scope        String    // "OVERALL" | "CATEGORY"
+
+  // Periyot: aylık mı yıllık mı
+  period       String    // "MONTHLY" | "YEARLY"
+
+  // Kategori bazlı hedefler için
+  categoryId   String?
+  category     Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  // Hedef tipi: tasarruf mu, maksimum harcama mı
+  direction    String    // "SAVE" | "SPEND_MAX"
+  targetAmount Float
+
+  // Hangi zaman aralığı için geçerli
+  year         Int
+  month        Int?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([userId, year, month, scope, period])
+}

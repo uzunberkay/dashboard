@@ -1,0 +1,14 @@
+2026-03-18 10:06:25.251 +03 [43128] LOG:  starting PostgreSQL 16.13, compiled by Visual C++ build 1944, 64-bit
+2026-03-18 10:06:25.255 +03 [43128] LOG:  listening on IPv6 address "::1", port 5432
+2026-03-18 10:06:25.256 +03 [43128] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-03-18 10:06:25.296 +03 [183100] LOG:  database system was interrupted; last known up at 2026-03-17 17:50:52 +03
+2026-03-18 10:06:27.346 +03 [183100] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-03-18 10:06:27.348 +03 [183100] LOG:  redo starts at 0/1A79A20
+2026-03-18 10:06:27.348 +03 [183100] LOG:  invalid record length at 0/1A79B08: expected at least 24, got 0
+2026-03-18 10:06:27.348 +03 [183100] LOG:  redo done at 0/1A79AD0 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2026-03-18 10:06:27.353 +03 [190136] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-03-18 10:06:27.362 +03 [190136] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.002 s, total=0.012 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1A79B08, redo lsn=0/1A79B08
+2026-03-18 10:06:27.379 +03 [43128] LOG:  database system is ready to accept connections
+2026-03-18 10:06:51.726 +03 [92108] ERROR:  unterminated quoted identifier at or near "" User\;" at character 36
+2026-03-18 10:06:51.726 +03 [92108] STATEMENT:  select count(*) as user_count from " User\;
+2026-03-18 10:11:50.572 +03 [32904] LOG:  could not receive data from client: unrecognized winsock error 10054
