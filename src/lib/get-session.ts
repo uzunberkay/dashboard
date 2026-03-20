@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
 import { NextResponse } from "next/server"
+import { authOptions } from "@/lib/auth"
 
 export async function getAuthSession() {
   const session = await getServerSession(authOptions)
@@ -13,5 +13,9 @@ export async function getAuthSession() {
 }
 
 export function unauthorized() {
-  return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 })
+  return NextResponse.json({ error: "Yetkisiz erisim" }, { status: 401 })
+}
+
+export function forbidden() {
+  return NextResponse.json({ error: "Bu islem icin yetkiniz yok" }, { status: 403 })
 }

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
+import { revalidateTag } from "next/cache"
 import { prisma } from "@/lib/prisma"
+import { CACHE_TAGS } from "@/lib/cache-tags"
 import { getAuthSession, unauthorized } from "@/lib/get-session"
 import { transactionSchema } from "@/lib/validations"
 import { getRateLimitResponse } from "@/lib/rate-limit"
@@ -151,6 +153,8 @@ export async function POST(req: Request) {
         }
       }
     }
+    revalidateTag(CACHE_TAGS.dashboard, "max")
+    revalidateTag(CACHE_TAGS.goalsSummary, "max")
 
     return NextResponse.json({ transaction, budgetAlert }, { status: 201 })
   } catch (err) {

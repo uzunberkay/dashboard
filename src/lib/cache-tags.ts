@@ -1,0 +1,18 @@
+export const CACHE_TAGS = {
+  dashboard: "dashboard-data",
+  categories: "categories-data",
+  goals: "goals-data",
+  goalsSummary: "goals-summary-data",
+  recurringRules: "recurring-rules-data",
+  scheduledPayments: "scheduled-payments-data",
+  reminders: "reminders-data",
+  notificationPreferences: "notification-preferences-data",
+  monthlyReports: "monthly-reports-data",
+  adminDashboard: "admin-dashboard-data",
+  adminUsers: "admin-users-data",
+  adminSystem: "admin-system-data",
+  adminSettings: "admin-settings-data",
+  activityLogs: "activity-logs-data",
+  adminActivity: "admin-activity-data",
+  adminSavedViews: "admin-saved-views-data",
+} as const

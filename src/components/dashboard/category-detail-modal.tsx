@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { fetchJsonWithCache } from "@/lib/client-fetch"
 import { formatCurrency, formatDate } from "@/lib/utils"
 import type { CategoryExpense, TransactionWithCategory } from "@/types"
 
@@ -29,23 +30,27 @@ export function CategoryDetailModal({ category, month, open, onClose }: Category
       return
     }
 
-    const timeoutId = window.setTimeout(() => {
+    const loadTransactions = async () => {
       setLoading(true)
       const params = new URLSearchParams({ month, type: "EXPENSE" })
 
-      fetch(`/api/transactions?${params}`)
-        .then((r) => r.json())
-        .then((data: TransactionWithCategory[]) => {
-          const filtered = data.filter(
-            (t) => t.categoryId && category.categoryIds.includes(t.categoryId)
-          )
-          setFetchedTransactions(filtered)
-        })
-        .catch(() => setFetchedTransactions([]))
-        .finally(() => setLoading(false))
-    }, 0)
+      try {
+        const data = await fetchJsonWithCache<TransactionWithCategory[]>(
+          `/api/transactions?${params}`,
+          { ttlMs: 12000 }
+        )
+        const filtered = data.filter(
+          (transaction) => transaction.categoryId && category.categoryIds.includes(transaction.categoryId)
+        )
+        setFetchedTransactions(filtered)
+      } catch {
+        setFetchedTransactions([])
+      } finally {
+        setLoading(false)
+      }
+    }
 
-    return () => window.clearTimeout(timeoutId)
+    void loadTransactions()
   }, [open, category, month])
 
   if (!category) return null

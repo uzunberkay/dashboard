@@ -18,6 +18,9 @@ const envSchema = z.object({
   RATE_LIMIT_LOGIN_WINDOW_MS: z.string().optional(),
   RATE_LIMIT_MUTATION_MAX: z.string().optional(),
   RATE_LIMIT_MUTATION_WINDOW_MS: z.string().optional(),
+  RESEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().email("EMAIL_FROM must be a valid email").optional(),
+  CRON_SECRET: z.string().optional(),
 }).superRefine((env, ctx) => {
   if (env.NEXTAUTH_URL) {
     return

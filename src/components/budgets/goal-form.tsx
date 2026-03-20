@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "@/hooks/use-toast"
+import { fetchJsonWithCache } from "@/lib/client-fetch"
 import type { Goal, MainCategory } from "@/types"
 
 interface GoalFormProps {
@@ -36,8 +37,7 @@ export function GoalForm({ open, onClose, onSaved, editGoal }: GoalFormProps) {
 
   useEffect(() => {
     if (open) {
-      fetch("/api/categories")
-        .then((r) => r.json())
+      void fetchJsonWithCache<MainCategory[]>("/api/categories", { ttlMs: 30000 })
         .then(setCategories)
         .catch(() => setCategories([]))
 

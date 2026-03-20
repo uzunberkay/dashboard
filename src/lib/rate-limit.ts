@@ -2,7 +2,14 @@ import { NextResponse } from "next/server"
 import { getServerEnv } from "@/lib/env"
 import { getClientIp } from "@/lib/request"
 
-type BucketName = "login" | "register" | "transactions" | "categories" | "goals"
+type BucketName =
+  | "login"
+  | "register"
+  | "transactions"
+  | "categories"
+  | "goals"
+  | "recurring-rules"
+  | "scheduled-payments"
 
 type Entry = {
   count: number

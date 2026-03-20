@@ -1,9 +1,11 @@
+import { ActivityLogEvent } from "@prisma/client"
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { compare } from "bcryptjs"
-import { prisma } from "@/lib/prisma"
 import { deriveNextAuthUrlFromVercel } from "@/lib/env"
-import { getClientIp } from "@/lib/request"
+import { logger } from "@/lib/logger"
+import { prisma } from "@/lib/prisma"
+import { getClientIp, getUserAgent } from "@/lib/request"
 import { consumeRateLimit } from "@/lib/rate-limit"
 
 const derivedNextAuthUrl = deriveNextAuthUrlFromVercel()
@@ -23,7 +25,7 @@ export const authOptions: NextAuthOptions = {
       name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Şifre", type: "password" },
+        password: { label: "Sifre", type: "password" },
       },
       async authorize(credentials, req) {
         const rateLimit = consumeRateLimit("login", getClientIp({ headers: req?.headers }))
@@ -33,7 +35,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("E-posta ve şifre gereklidir")
+          throw new Error("E-posta ve sifre gereklidir")
         }
 
         const user = await prisma.user.findUnique({
@@ -41,19 +43,44 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (!user) {
-          throw new Error("Kullanıcı bulunamadı")
+          throw new Error("Kullanici bulunamadi")
         }
 
         const isPasswordValid = await compare(credentials.password, user.password)
 
         if (!isPasswordValid) {
-          throw new Error("Geçersiz şifre")
+          throw new Error("Gecersiz sifre")
+        }
+
+        if (!user.isActive) {
+          throw new Error("Hesabiniz devre disi. Lutfen yonetici ile iletisime gecin.")
+        }
+
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        })
+
+        try {
+          await prisma.activityLog.create({
+            data: {
+              event: ActivityLogEvent.LOGIN,
+              actorUserId: user.id,
+              targetUserId: user.id,
+              ipAddress: getClientIp({ headers: req?.headers }),
+              userAgent: getUserAgent({ headers: req?.headers }),
+            },
+          })
+        } catch (error) {
+          logger.error("Login activity log write failed", error, { userId: user.id })
         }
 
         return {
           id: user.id,
           email: user.email,
           name: user.name,
+          role: user.role,
+          isActive: user.isActive,
         }
       },
     }),
@@ -64,22 +91,19 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id
         session.user.name = token.name ?? null
         session.user.email = token.email ?? null
+        session.user.role = token.role ?? "USER"
+        session.user.isActive = token.isActive ?? true
       }
+
       return session
     },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-      }
-
-      if (token.id) {
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.id as string },
-          select: { id: true },
-        })
-        if (!dbUser) {
-          delete token.id
-        }
+        token.name = user.name
+        token.email = user.email
+        token.role = user.role
+        token.isActive = user.isActive
       }
 
       return token

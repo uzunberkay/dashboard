@@ -1,4 +1,13 @@
 type LogLevel = "info" | "warn" | "error"
+type ErrorHistoryEntry = {
+  level: "error"
+  message: string
+  timestamp: string
+  meta?: Record<string, unknown>
+}
+
+const MAX_ERROR_HISTORY = 25
+const errorHistory: ErrorHistoryEntry[] = []
 
 function serializeError(error: unknown) {
   if (error instanceof Error) {
@@ -18,6 +27,13 @@ function writeLog(level: LogLevel, message: string, meta?: Record<string, unknow
     message,
     timestamp: new Date().toISOString(),
     ...(meta ? { meta } : {}),
+  }
+
+  if (level === "error") {
+    errorHistory.unshift(payload as ErrorHistoryEntry)
+    if (errorHistory.length > MAX_ERROR_HISTORY) {
+      errorHistory.length = MAX_ERROR_HISTORY
+    }
   }
 
   const serialized = JSON.stringify(payload)
@@ -48,4 +64,8 @@ export const logger = {
       ...(error === undefined ? {} : { error: serializeError(error) }),
     })
   },
+}
+
+export function getRecentErrors(limit = 10) {
+  return errorHistory.slice(0, limit)
 }

@@ -12,3 +12,391 @@
 2026-03-18 10:06:51.726 +03 [92108] ERROR:  unterminated quoted identifier at or near "" User\;" at character 36
 2026-03-18 10:06:51.726 +03 [92108] STATEMENT:  select count(*) as user_count from " User\;
 2026-03-18 10:11:50.572 +03 [32904] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 10:56:27.440 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 10:56:28.310 +03 [190136] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.851 s, sync=0.005 s, total=0.870 s; sync files=6, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=2 kB; lsn=0/1A7A4E8, redo lsn=0/1A7A4B0
+2026-03-18 13:21:28.960 +03 [176460] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:21:28.961 +03 [158632] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:21:28.962 +03 [201192] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:21:28.962 +03 [194152] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:21:28.962 +03 [16488] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:21:28.962 +03 [3664] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:21:28.962 +03 [8208] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:21:28.962 +03 [158012] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:21:28.962 +03 [19944] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:46:27.573 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 13:46:28.133 +03 [190136] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.545 s, sync=0.004 s, total=0.561 s; sync files=6, longest=0.002 s, average=0.001 s; distance=17 kB, estimate=17 kB; lsn=0/1A7E970, redo lsn=0/1A7E938
+2026-03-18 13:56:50.084 +03 [184716] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:56:50.085 +03 [180348] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:56:50.085 +03 [177196] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:56:50.085 +03 [189040] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:56:50.086 +03 [181484] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:56:50.086 +03 [172536] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 13:56:50.086 +03 [152136] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:01:27.173 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 14:01:32.323 +03 [190136] LOG:  checkpoint complete: wrote 49 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.123 s, sync=0.022 s, total=5.150 s; sync files=45, longest=0.002 s, average=0.001 s; distance=176 kB, estimate=176 kB; lsn=0/1AAA9B0, redo lsn=0/1AAA978
+2026-03-18 14:10:37.641 +03 [103012] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:37.641 +03 [124424] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:37.642 +03 [138396] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:37.642 +03 [223580] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:37.642 +03 [58580] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:37.642 +03 [80420] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:37.642 +03 [143940] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:37.642 +03 [111176] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:46.837 +03 [84252] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:46.838 +03 [60772] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:46.838 +03 [106892] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:46.838 +03 [141204] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:46.838 +03 [124304] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:46.838 +03 [134952] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:10:46.838 +03 [84116] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:11:27.345 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 14:11:27.837 +03 [115196] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:11:29.423 +03 [190136] LOG:  checkpoint complete: wrote 20 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.051 s, sync=0.011 s, total=2.079 s; sync files=16, longest=0.004 s, average=0.001 s; distance=2 kB, estimate=158 kB; lsn=0/1AAB4C8, redo lsn=0/1AAB490
+2026-03-18 14:21:27.429 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 14:21:28.178 +03 [190136] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.736 s, sync=0.006 s, total=0.750 s; sync files=8, longest=0.002 s, average=0.001 s; distance=3 kB, estimate=143 kB; lsn=0/1AAC308, redo lsn=0/1AAC2D0
+2026-03-18 14:33:25.263 +03 [48460] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:25.263 +03 [43320] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:25.264 +03 [155476] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:25.264 +03 [193656] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:25.264 +03 [37936] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:25.264 +03 [56964] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:25.264 +03 [173520] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:25.264 +03 [195440] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.129 +03 [79284] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [100676] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [200496] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [100736] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [196476] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [156696] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [61764] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [23468] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [31212] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [203232] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [209208] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [93780] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [10052] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [39088] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [75252] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 14:33:32.130 +03 [85408] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:31:27.310 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 15:31:27.990 +03 [190136] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.662 s, sync=0.009 s, total=0.681 s; sync files=7, longest=0.005 s, average=0.002 s; distance=3 kB, estimate=129 kB; lsn=0/1AAD288, redo lsn=0/1AAD250
+2026-03-18 15:56:01.103 +03 [229372] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:01.104 +03 [115804] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:01.104 +03 [80624] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:01.104 +03 [86864] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:01.104 +03 [188208] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:01.104 +03 [160036] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:01.104 +03 [138512] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:01.104 +03 [47052] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:01.104 +03 [223716] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:01.104 +03 [216716] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:28.002 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 15:56:33.166 +03 [190136] LOG:  checkpoint complete: wrote 49 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.132 s, sync=0.026 s, total=5.164 s; sync files=48, longest=0.002 s, average=0.001 s; distance=224 kB, estimate=224 kB; lsn=0/1AE54E8, redo lsn=0/1AE5478
+2026-03-18 15:56:50.640 +03 [112500] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:56:50.640 +03 [59308] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:58:08.360 +03 [228824] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:58:08.361 +03 [221012] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:59:05.678 +03 [99764] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 15:59:05.678 +03 [151412] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 16:01:28.170 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 16:01:29.491 +03 [190136] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.307 s, sync=0.006 s, total=1.322 s; sync files=8, longest=0.002 s, average=0.001 s; distance=23 kB, estimate=204 kB; lsn=0/1AEB3C8, redo lsn=0/1AEB390
+2026-03-18 16:06:28.505 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 16:06:29.486 +03 [190136] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.970 s, sync=0.007 s, total=0.982 s; sync files=10, longest=0.002 s, average=0.001 s; distance=5 kB, estimate=184 kB; lsn=0/1AEC878, redo lsn=0/1AEC840
+2026-03-18 16:26:38.912 +03 [119412] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 16:26:38.912 +03 [128600] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 16:42:14.646 +03 [214220] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 16:42:14.646 +03 [199376] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 16:45:25.908 +03 [24920] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 16:45:25.909 +03 [178880] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 16:46:28.533 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 16:46:29.861 +03 [190136] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.315 s, sync=0.008 s, total=1.328 s; sync files=12, longest=0.002 s, average=0.001 s; distance=38 kB, estimate=169 kB; lsn=0/1AF6100, redo lsn=0/1AF60C8
+2026-03-18 17:26:14.479 +03 [190136] LOG:  checkpoint starting: immediate force wait
+2026-03-18 17:26:14.517 +03 [190136] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 1 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.003 s, total=0.038 s; sync files=5, longest=0.001 s, average=0.001 s; distance=4787 kB, estimate=4787 kB; lsn=0/1FA2F58, redo lsn=0/1FA2F20
+2026-03-18 17:26:14.850 +03 [190136] LOG:  checkpoint starting: immediate force wait
+2026-03-18 17:26:14.866 +03 [190136] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.006 s, total=0.016 s; sync files=10, longest=0.001 s, average=0.001 s; distance=4787 kB, estimate=4787 kB; lsn=0/244FEB8, redo lsn=0/244FE80
+2026-03-18 17:30:57.249 +03 [21764] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [21540] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [112620] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [41268] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [41868] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [6316] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [38836] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [54340] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [168376] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [30264] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [44812] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [29636] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [91928] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [69592] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [62856] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [179712] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.253 +03 [129736] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [46720] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.253 +03 [170984] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:30:57.252 +03 [20300] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:31:14.867 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 17:31:22.752 +03 [190136] LOG:  checkpoint complete: wrote 74 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.837 s, sync=0.039 s, total=7.886 s; sync files=74, longest=0.002 s, average=0.001 s; distance=394 kB, estimate=4348 kB; lsn=0/24B2748, redo lsn=0/24B2710
+2026-03-18 17:36:14.755 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 17:36:15.410 +03 [190136] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.633 s, sync=0.005 s, total=0.656 s; sync files=6, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=3913 kB; lsn=0/24B2FF0, redo lsn=0/24B2FB8
+2026-03-18 17:43:29.401 +03 [109460] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 17:43:29.401 +03 [21404] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-18 18:21:14.468 +03 [190136] LOG:  checkpoint starting: time
+2026-03-18 18:21:16.142 +03 [190136] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.659 s, sync=0.009 s, total=1.674 s; sync files=16, longest=0.002 s, average=0.001 s; distance=23 kB, estimate=3524 kB; lsn=0/24B8EE0, redo lsn=0/24B8EA8
+2026-03-18 19:57:26.660 +03 [227884] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.660 +03 [96208] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.660 +03 [227160] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.660 +03 [204016] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.660 +03 [87764] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.660 +03 [74564] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.660 +03 [89172] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.660 +03 [222552] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.660 +03 [132092] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [76440] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [143732] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [137196] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [191004] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [35048] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [159856] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [91324] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [91168] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [144172] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.661 +03 [175136] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.662 +03 [224356] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-18 19:57:26.662 +03 [99288] FATAL:  terminating connection due to unexpected postmaster exit
+2026-03-19 22:04:02.960 +03 [101564] LOG:  starting PostgreSQL 16.13, compiled by Visual C++ build 1944, 64-bit
+2026-03-19 22:04:02.964 +03 [101564] LOG:  listening on IPv6 address "::1", port 5432
+2026-03-19 22:04:02.964 +03 [101564] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-03-19 22:04:03.000 +03 [18804] LOG:  database system was interrupted; last known up at 2026-03-18 18:21:16 +03
+2026-03-19 22:04:05.068 +03 [18804] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-03-19 22:04:05.071 +03 [18804] LOG:  redo starts at 0/24B8EA8
+2026-03-19 22:04:05.071 +03 [18804] LOG:  invalid record length at 0/24B8F90: expected at least 24, got 0
+2026-03-19 22:04:05.071 +03 [18804] LOG:  redo done at 0/24B8F58 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2026-03-19 22:04:05.075 +03 [19960] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-03-19 22:04:05.084 +03 [19960] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.002 s, total=0.011 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/24B8F90, redo lsn=0/24B8F90
+2026-03-19 22:04:05.103 +03 [101564] LOG:  database system is ready to accept connections
+2026-03-19 22:04:19.416 +03 [107812] ERROR:  type "RecurringFrequency" already exists
+2026-03-19 22:04:19.416 +03 [107812] STATEMENT:  -- CreateEnum
+	CREATE TYPE "RecurringFrequency" AS ENUM ('WEEKLY', 'MONTHLY', 'CUSTOM_MONTH_DAY');
+	
+	-- CreateEnum
+	CREATE TYPE "ScheduledPaymentStatus" AS ENUM ('PENDING', 'PAID', 'SKIPPED');
+	
+	-- CreateEnum
+	CREATE TYPE "ReminderChannel" AS ENUM ('IN_APP', 'EMAIL');
+	
+	-- CreateEnum
+	CREATE TYPE "ReminderType" AS ENUM ('PAYMENT_UPCOMING', 'MONTHLY_DIGEST');
+	
+	-- CreateEnum
+	CREATE TYPE "ReminderStatus" AS ENUM ('PENDING', 'SENT', 'SKIPPED', 'FAILED');
+	
+	-- CreateTable
+	CREATE TABLE "RecurringRule" (
+	    "id" TEXT NOT NULL,
+	    "name" TEXT NOT NULL,
+	    "type" TEXT NOT NULL,
+	    "amount" DOUBLE PRECISION NOT NULL,
+	    "description" TEXT,
+	    "frequency" "RecurringFrequency" NOT NULL,
+	    "customMonthDay" INTEGER,
+	    "startsAt" TIMESTAMP(3) NOT NULL,
+	    "endsAt" TIMESTAMP(3),
+	    "isActive" BOOLEAN NOT NULL DEFAULT true,
+	    "isSubscription" BOOLEAN NOT NULL DEFAULT false,
+	    "reminderDaysBefore" INTEGER NOT NULL DEFAULT 3,
+	    "categoryId" TEXT,
+	    "userId" TEXT NOT NULL,
+	    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	    "updatedAt" TIMESTAMP(3) NOT NULL,
+	
+	    CONSTRAINT "RecurringRule_pkey" PRIMARY KEY ("id")
+	);
+	
+	-- CreateTable
+	CREATE TABLE "ScheduledPayment" (
+	    "id" TEXT NOT NULL,
+	    "name" TEXT NOT NULL,
+	    "type" TEXT NOT NULL,
+	    "amount" DOUBLE PRECISION NOT NULL,
+	    "description" TEXT,
+	    "dueDate" TIMESTAMP(3) NOT NULL,
+	    "status" "ScheduledPaymentStatus" NOT NULL DEFAULT 'PENDING',
+	    "source" TEXT NOT NULL DEFAULT 'RECURRING',
+	    "paidAt" TIMESTAMP(3),
+	    "categoryId" TEXT,
+	    "recurringRuleId" TEXT,
+	    "transactionId" TEXT,
+	    "userId" TEXT NOT NULL,
+	    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	    "updatedAt" TIMESTAMP(3) NOT NULL,
+	
+	    CONSTRAINT "ScheduledPayment_pkey" PRIMARY KEY ("id")
+	);
+	
+	-- CreateTable
+	CREATE TABLE "Reminder" (
+	    "id" TEXT NOT NULL,
+	    "type" "ReminderType" NOT NULL,
+	    "channel" "ReminderChannel" NOT NULL,
+	    "status" "ReminderStatus" NOT NULL DEFAULT 'PENDING',
+	    "sendAt" TIMESTAMP(3) NOT NULL,
+	    "sentAt" TIMESTAMP(3),
+	    "lastError" TEXT,
+	    "scheduledPaymentId" TEXT,
+	    "monthlyReportId" TEXT,
+	    "userId" TEXT NOT NULL,
+	    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	    "updatedAt" TIMESTAMP(3) NOT NULL,
+	
+	    CONSTRAINT "Reminder_pkey" PRIMARY KEY ("id")
+	);
+	
+	-- CreateTable
+	CREATE TABLE "NotificationPreference" (
+	    "userId" TEXT NOT NULL,
+	    "emailReminders" BOOLEAN NOT NULL DEFAULT true,
+	    "emailMonthlyDigest" BOOLEAN NOT NULL DEFAULT true,
+	    "reminderLeadDays" INTEGER NOT NULL DEFAULT 3,
+	    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	    "updatedAt" TIMESTAMP(3) NOT NULL,
+	
+	    CONSTRAINT "NotificationPreference_pkey" PRIMARY KEY ("userId")
+	);
+	
+	-- CreateTable
+	CREATE TABLE "MonthlyReport" (
+	    "id" TEXT NOT NULL,
+	    "title" TEXT NOT NULL,
+	    "summaryText" TEXT NOT NULL,
+	    "metricsJson" JSONB NOT NULL,
+	    "highlightsJson" JSONB,
+	    "emailSentAt" TIMESTAMP(3),
+	    "year" INTEGER NOT NULL,
+	    "month" INTEGER NOT NULL,
+	    "userId" TEXT NOT NULL,
+	    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	    "updatedAt" TIMESTAMP(3) NOT NULL,
+	
+	    CONSTRAINT "MonthlyReport_pkey" PRIMARY KEY ("id")
+	);
+	
+	-- CreateIndex
+	CREATE INDEX "RecurringRule_userId_isActive_frequency_idx" ON "RecurringRule"("userId", "isActive", "frequency");
+	
+	-- CreateIndex
+	CREATE INDEX "RecurringRule_categoryId_isSubscription_idx" ON "RecurringRule"("categoryId", "isSubscription");
+	
+	-- CreateIndex
+	CREATE UNIQUE INDEX "ScheduledPayment_transactionId_key" ON "ScheduledPayment"("transactionId");
+	
+	-- CreateIndex
+	CREATE INDEX "ScheduledPayment_userId_dueDate_status_idx" ON "ScheduledPayment"("userId", "dueDate", "status");
+	
+	-- CreateIndex
+	CREATE INDEX "ScheduledPayment_categoryId_dueDate_idx" ON "ScheduledPayment"("categoryId", "dueDate");
+	
+	-- CreateIndex
+	CREATE INDEX "ScheduledPayment_recurringRuleId_dueDate_idx" ON "ScheduledPayment"("recurringRuleId", "dueDate");
+	
+	-- CreateIndex
+	CREATE INDEX "Reminder_userId_channel_status_sendAt_idx" ON "Reminder"("userId", "channel", "status", "sendAt");
+	
+	-- CreateIndex
+	CREATE INDEX "Reminder_scheduledPaymentId_channel_type_idx" ON "Reminder"("scheduledPaymentId", "channel", "type");
+	
+	-- CreateIndex
+	CREATE INDEX "Reminder_monthlyReportId_channel_type_idx" ON "Reminder"("monthlyReportId", "channel", "type");
+	
+	-- CreateIndex
+	CREATE INDEX "MonthlyReport_userId_createdAt_idx" ON "MonthlyReport"("userId", "createdAt");
+	
+	-- CreateIndex
+	CREATE UNIQUE INDEX "MonthlyReport_userId_year_month_key" ON "MonthlyReport"("userId", "year", "month");
+	
+	-- AddForeignKey
+	ALTER TABLE "RecurringRule" ADD CONSTRAINT "RecurringRule_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "RecurringRule" ADD CONSTRAINT "RecurringRule_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "ScheduledPayment" ADD CONSTRAINT "ScheduledPayment_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "ScheduledPayment" ADD CONSTRAINT "ScheduledPayment_recurringRuleId_fkey" FOREIGN KEY ("recurringRuleId") REFERENCES "RecurringRule"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "ScheduledPayment" ADD CONSTRAINT "ScheduledPayment_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "Transaction"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "ScheduledPayment" ADD CONSTRAINT "ScheduledPayment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "Reminder" ADD CONSTRAINT "Reminder_scheduledPaymentId_fkey" FOREIGN KEY ("scheduledPaymentId") REFERENCES "ScheduledPayment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "Reminder" ADD CONSTRAINT "Reminder_monthlyReportId_fkey" FOREIGN KEY ("monthlyReportId") REFERENCES "MonthlyReport"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "Reminder" ADD CONSTRAINT "Reminder_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "NotificationPreference" ADD CONSTRAINT "NotificationPreference_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+	
+	-- AddForeignKey
+	ALTER TABLE "MonthlyReport" ADD CONSTRAINT "MonthlyReport_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+	
+	
+2026-03-19 22:09:05.093 +03 [19960] LOG:  checkpoint starting: time
+2026-03-19 22:09:07.072 +03 [19960] LOG:  checkpoint complete: wrote 19 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.960 s, sync=0.010 s, total=1.980 s; sync files=17, longest=0.002 s, average=0.001 s; distance=43 kB, estimate=43 kB; lsn=0/24C3D30, redo lsn=0/24C3CF8
+2026-03-19 22:14:05.084 +03 [19960] LOG:  checkpoint starting: time
+2026-03-19 22:14:05.865 +03 [19960] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.766 s, sync=0.006 s, total=0.782 s; sync files=8, longest=0.002 s, average=0.001 s; distance=28 kB, estimate=41 kB; lsn=0/24CB118, redo lsn=0/24CB0E0
+2026-03-19 22:19:05.872 +03 [19960] LOG:  checkpoint starting: time
+2026-03-19 22:19:07.075 +03 [19960] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.187 s, sync=0.007 s, total=1.204 s; sync files=11, longest=0.002 s, average=0.001 s; distance=52 kB, estimate=52 kB; lsn=0/24DE200, redo lsn=0/24D8288
+2026-03-19 22:24:05.086 +03 [19960] LOG:  checkpoint starting: time
+2026-03-19 22:24:06.631 +03 [19960] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.526 s, sync=0.011 s, total=1.546 s; sync files=12, longest=0.005 s, average=0.001 s; distance=58 kB, estimate=58 kB; lsn=0/24E6E08, redo lsn=0/24E6DD0
+2026-03-19 22:29:05.639 +03 [19960] LOG:  checkpoint starting: time
+2026-03-19 22:29:07.183 +03 [19960] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.525 s, sync=0.008 s, total=1.544 s; sync files=12, longest=0.002 s, average=0.001 s; distance=62 kB, estimate=62 kB; lsn=0/24F6938, redo lsn=0/24F6900
+2026-03-19 22:34:06.249 +03 [101564] LOG:  server process (PID 145768) was terminated by exception 0x40010004
+2026-03-19 22:34:06.249 +03 [101564] DETAIL:  Failed process was running: SELECT "public"."Goal"."id", "public"."Goal"."userId", "public"."Goal"."scope", "public"."Goal"."period", "public"."Goal"."categoryId", "public"."Goal"."direction", "public"."Goal"."targetAmount", "public"."Goal"."year", "public"."Goal"."month", "public"."Goal"."createdAt", "public"."Goal"."updatedAt" FROM "public"."Goal" WHERE ("public"."Goal"."userId" = $1 AND "public"."Goal"."year" = $2 AND (("public"."Goal"."period" = $3 AND "public"."Goal"."month" = $4) OR "public"."Goal"."period" = $5)) ORDER BY "public"."Goal"."period" ASC, "public"."Goal"."scope" ASC OFFSET $6
+2026-03-19 22:34:06.249 +03 [101564] HINT:  See C include file "ntstatus.h" for a description of the hexadecimal value.
+2026-03-19 22:34:06.250 +03 [101564] LOG:  terminating any other active server processes
+2026-03-19 22:34:06.281 +03 [101564] LOG:  all server processes terminated; reinitializing
+2026-03-19 22:34:06.374 +03 [101564] LOG:  startup process (PID 176952) was terminated by exception 0xC000026B
+2026-03-19 22:34:06.374 +03 [101564] HINT:  See C include file "ntstatus.h" for a description of the hexadecimal value.
+2026-03-19 22:34:06.375 +03 [101564] LOG:  aborting startup due to startup process failure
+2026-03-19 22:34:06.379 +03 [101564] LOG:  database system is shut down
+2026-03-20 20:39:28.898 +03 [53884] LOG:  starting PostgreSQL 16.13, compiled by Visual C++ build 1944, 64-bit
+2026-03-20 20:39:28.901 +03 [53884] LOG:  listening on IPv6 address "::1", port 5432
+2026-03-20 20:39:28.901 +03 [53884] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-03-20 20:39:28.938 +03 [100544] LOG:  database system was interrupted; last known up at 2026-03-19 22:29:07 +03
+2026-03-20 20:39:31.431 +03 [100544] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-03-20 20:39:31.433 +03 [100544] LOG:  redo starts at 0/24F6900
+2026-03-20 20:39:31.433 +03 [100544] LOG:  invalid record length at 0/24F69E8: expected at least 24, got 0
+2026-03-20 20:39:31.433 +03 [100544] LOG:  redo done at 0/24F69B0 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2026-03-20 20:39:31.439 +03 [103204] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-03-20 20:39:31.448 +03 [103204] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.002 s, total=0.013 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/24F69E8, redo lsn=0/24F69E8
+2026-03-20 20:39:31.468 +03 [53884] LOG:  database system is ready to accept connections
+2026-03-20 20:44:31.447 +03 [103204] LOG:  checkpoint starting: time
+2026-03-20 20:44:32.212 +03 [103204] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.751 s, sync=0.009 s, total=0.766 s; sync files=8, longest=0.005 s, average=0.002 s; distance=28 kB, estimate=28 kB; lsn=0/24FDD08, redo lsn=0/24FDCD0
+2026-03-20 23:04:31.416 +03 [103204] LOG:  checkpoint starting: time
+2026-03-20 23:04:32.197 +03 [103204] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.765 s, sync=0.008 s, total=0.782 s; sync files=8, longest=0.002 s, average=0.001 s; distance=29 kB, estimate=29 kB; lsn=0/2505198, redo lsn=0/2505160
+2026-03-20 23:04:45.964 +03 [100892] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.966 +03 [154816] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.967 +03 [173172] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.967 +03 [136500] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.969 +03 [83008] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.970 +03 [38060] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.970 +03 [155804] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.970 +03 [40120] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.972 +03 [190148] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.972 +03 [205752] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.972 +03 [187180] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.972 +03 [132668] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.972 +03 [70756] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.973 +03 [211044] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.973 +03 [36184] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.973 +03 [112128] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.973 +03 [108356] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.973 +03 [160744] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-20 23:04:45.973 +03 [177428] LOG:  could not receive data from client: unrecognized winsock error 10054

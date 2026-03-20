@@ -1,19 +1,25 @@
+import { revalidateTag } from "next/cache"
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { CACHE_TAGS } from "@/lib/cache-tags"
 import { getAuthSession, unauthorized } from "@/lib/get-session"
-import { transactionSchema } from "@/lib/validations"
-import { getRateLimitResponse } from "@/lib/rate-limit"
 import { logger } from "@/lib/logger"
+import { prisma } from "@/lib/prisma"
+import { getRateLimitResponse } from "@/lib/rate-limit"
+import { transactionSchema } from "@/lib/validations"
 
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession()
-  if (!session) return unauthorized()
+  if (!session) {
+    return unauthorized()
+  }
 
   const rateLimitResponse = getRateLimitResponse(req, "transactions", session.user.id)
-  if (rateLimitResponse) return rateLimitResponse
+  if (rateLimitResponse) {
+    return rateLimitResponse
+  }
 
   const { id } = await params
 
@@ -45,7 +51,7 @@ export async function PUT(
     })
 
     if (result.count === 0) {
-      return NextResponse.json({ error: "İşlem bulunamadı" }, { status: 404 })
+      return NextResponse.json({ error: "Islem bulunamadi" }, { status: 404 })
     }
 
     const updated = await prisma.transaction.findUnique({
@@ -53,23 +59,34 @@ export async function PUT(
       include: { category: { select: { id: true, name: true } } },
     })
 
+    revalidateTag(CACHE_TAGS.dashboard, "max")
+    revalidateTag(CACHE_TAGS.goalsSummary, "max")
+
     return NextResponse.json(updated)
-  } catch (err) {
-    logger.error("Transaction update error", err, { userId: session.user.id, transactionId: id })
-    const message = err instanceof Error ? err.message : "Geçersiz veri"
+  } catch (error) {
+    logger.error("Transaction update error", error, {
+      userId: session.user.id,
+      transactionId: id,
+    })
+
+    const message = error instanceof Error ? error.message : "Gecersiz veri"
     return NextResponse.json({ error: message }, { status: 400 })
   }
 }
 
 export async function DELETE(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession()
-  if (!session) return unauthorized()
+  if (!session) {
+    return unauthorized()
+  }
 
-  const rateLimitResponse = getRateLimitResponse(_req, "transactions", session.user.id)
-  if (rateLimitResponse) return rateLimitResponse
+  const rateLimitResponse = getRateLimitResponse(req, "transactions", session.user.id)
+  if (rateLimitResponse) {
+    return rateLimitResponse
+  }
 
   const { id } = await params
 
@@ -78,8 +95,12 @@ export async function DELETE(
   })
 
   if (result.count === 0) {
-    return NextResponse.json({ error: "İşlem bulunamadı" }, { status: 404 })
+    return NextResponse.json({ error: "Islem bulunamadi" }, { status: 404 })
   }
 
-  return NextResponse.json({ message: "İşlem silindi" })
+  revalidateTag(CACHE_TAGS.dashboard, "max")
+  revalidateTag(CACHE_TAGS.goalsSummary, "max")
+
+  return NextResponse.json({ message: "Islem silindi" })
 }
+

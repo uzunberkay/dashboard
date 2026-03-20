@@ -19,6 +19,10 @@ function readHeader(headers: HeadersLike, name: string) {
   return value
 }
 
+export function getHeaderValue(headers: HeadersLike, name: string) {
+  return readHeader(headers, name)
+}
+
 export function getClientIp(input: { headers?: HeadersLike } | Request | undefined) {
   const headers = input instanceof Request ? input.headers : input?.headers
   const forwardedFor = readHeader(headers, "x-forwarded-for")
@@ -28,4 +32,9 @@ export function getClientIp(input: { headers?: HeadersLike } | Request | undefin
   }
 
   return readHeader(headers, "x-real-ip") ?? "unknown"
+}
+
+export function getUserAgent(input: { headers?: HeadersLike } | Request | undefined) {
+  const headers = input instanceof Request ? input.headers : input?.headers
+  return readHeader(headers, "user-agent") ?? "unknown"
 }

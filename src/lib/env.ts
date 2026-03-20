@@ -18,6 +18,9 @@ const serverEnvSchema = z.object({
   RATE_LIMIT_LOGIN_WINDOW_MS: z.coerce.number().int().positive().default(600000),
   RATE_LIMIT_MUTATION_MAX: z.coerce.number().int().positive().default(60),
   RATE_LIMIT_MUTATION_WINDOW_MS: z.coerce.number().int().positive().default(60000),
+  RESEND_API_KEY: z.string().trim().optional(),
+  EMAIL_FROM: z.string().email("EMAIL_FROM must be a valid email").optional(),
+  CRON_SECRET: z.string().min(12, "CRON_SECRET is too short").optional(),
 }).superRefine((env, ctx) => {
   if (env.NEXTAUTH_URL) {
     return
@@ -95,4 +98,9 @@ export function getEffectiveNextAuthUrl() {
   const env = getServerEnv()
 
   return env.NEXTAUTH_URL ?? deriveNextAuthUrlFromVercel(env)
+}
+
+export function canSendEmail() {
+  const env = getServerEnv()
+  return Boolean(env.RESEND_API_KEY && env.EMAIL_FROM)
 }

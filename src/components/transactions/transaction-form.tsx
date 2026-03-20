@@ -20,6 +20,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { toast } from "@/hooks/use-toast"
+import { fetchJsonWithCache } from "@/lib/client-fetch"
 import type { TransactionType, MainCategory } from "@/types"
 
 interface TransactionFormProps {
@@ -45,8 +46,7 @@ export function TransactionForm({ open, onClose, onSuccess, editData }: Transact
 
   useEffect(() => {
     if (open) {
-      fetch("/api/categories")
-        .then((r) => r.json())
+      void fetchJsonWithCache<MainCategory[]>("/api/categories", { ttlMs: 30000 })
         .then(setCategories)
       if (editData) {
         setType(editData.type)

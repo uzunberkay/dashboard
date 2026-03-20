@@ -1,8 +1,35 @@
 import { NextRequest, NextResponse } from "next/server"
+import { revalidateTag, unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
+import { CACHE_TAGS } from "@/lib/cache-tags"
 import { getAuthSession, unauthorized } from "@/lib/get-session"
 import { goalSchema } from "@/lib/validations"
 import { getRateLimitResponse } from "@/lib/rate-limit"
+
+const getCachedGoals = unstable_cache(
+  async (userId: string, year: number, monthParam: string | null) =>
+    prisma.goal.findMany({
+      where: {
+        userId,
+        year,
+        OR: monthParam
+          ? [
+              { period: "MONTHLY", month: Number(monthParam) },
+              { period: "YEARLY" },
+            ]
+          : [{ period: "YEARLY" }, { month: null }],
+      },
+      include: {
+        category: { select: { id: true, name: true } },
+      },
+      orderBy: [{ period: "asc" }, { scope: "asc" }],
+    }),
+  ["goals-data-v1"],
+  {
+    revalidate: 30,
+    tags: [CACHE_TAGS.goals],
+  }
+)
 
 export async function GET(req: NextRequest) {
   const session = await getAuthSession()
@@ -12,22 +39,7 @@ export async function GET(req: NextRequest) {
   const year = Number(searchParams.get("year") || new Date().getFullYear())
   const monthParam = searchParams.get("month")
 
-  const goals = await prisma.goal.findMany({
-    where: {
-      userId: session.user.id,
-      year,
-      OR: monthParam
-        ? [
-            { period: "MONTHLY", month: Number(monthParam) },
-            { period: "YEARLY" },
-          ]
-        : [{ period: "YEARLY" }, { month: null }],
-    },
-    include: {
-      category: { select: { id: true, name: true } },
-    },
-    orderBy: [{ period: "asc" }, { scope: "asc" }],
-  })
+  const goals = await getCachedGoals(session.user.id, year, monthParam)
 
   return NextResponse.json(goals)
 }
@@ -78,6 +90,8 @@ export async function POST(req: Request) {
         categoryId,
       },
     })
+    revalidateTag(CACHE_TAGS.goals, "max")
+    revalidateTag(CACHE_TAGS.dashboard, "max")
 
     return NextResponse.json(goal, { status: 201 })
   } catch (err) {

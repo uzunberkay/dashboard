@@ -92,7 +92,7 @@ export function AuthShell({
                   </span>
                   <span className="block text-left">
                     <span className="block text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
-                      Budget Workspace
+                      Butce alani
                     </span>
                     <span className="mt-1 block text-sm font-semibold text-slate-800">
                       Modern finans arayuzu
@@ -129,7 +129,7 @@ export function AuthShell({
                     <div>
                       <p className="text-sm font-medium text-slate-300">Canli finans ozeti</p>
                       <p className="mt-2 text-xs uppercase tracking-[0.26em] text-slate-500">
-                        Monthly control board
+                        Aylik kontrol panosu
                       </p>
                     </div>
                     <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200">
@@ -143,7 +143,7 @@ export function AuthShell({
                       <div>
                         <p className="text-sm text-slate-400">Bu ay kalan bakiye</p>
                         <p className="mt-2 text-4xl font-semibold tracking-[-0.05em] text-white sm:text-[2.9rem]">
-                          ₺48.320
+                          48.320 TL
                         </p>
                         <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-emerald-400/10 px-3 py-1 text-sm font-medium text-emerald-300">
                           <TrendingUp className="h-4 w-4" />
@@ -173,7 +173,7 @@ export function AuthShell({
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-sm font-semibold text-slate-200">Kategori akisi</p>
                         <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-300">
-                          Live
+                          Canli
                         </span>
                       </div>
 
@@ -225,16 +225,16 @@ export function AuthShell({
               <div className="flex items-center justify-between gap-3">
                 <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
                   <BadgeCheck className="h-3.5 w-3.5 text-primary" />
-                  Secure access
+                  Guvenli erisim
                 </div>
                 <div className="rounded-full bg-slate-950 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-white">
-                  Private
+                  Ozel
                 </div>
               </div>
 
               <div className="mt-8 space-y-3">
                 <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
-                  Account flow
+                  Hesap akisi
                 </p>
                 <h2 className="text-3xl font-semibold tracking-[-0.04em] text-slate-950">
                   {title}

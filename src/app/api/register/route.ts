@@ -1,21 +1,22 @@
-import { NextResponse } from "next/server"
+import { ActivityLogEvent } from "@prisma/client"
 import { hash } from "bcryptjs"
-import { prisma } from "@/lib/prisma"
-import { registerSchema } from "@/lib/validations"
-import { getRateLimitResponse } from "@/lib/rate-limit"
+import { NextResponse } from "next/server"
 import { logger } from "@/lib/logger"
+import { prisma } from "@/lib/prisma"
+import { getRateLimitResponse } from "@/lib/rate-limit"
+import { registerSchema } from "@/lib/validations"
 
 const CATEGORY_TREE = [
-  { name: "Konut", icon: "home", children: ["Kira", "Aidat", "Tamirat/Bakım"] },
-  { name: "Faturalar", icon: "zap", children: ["Elektrik", "Su", "Doğalgaz", "İnternet", "Telefon"] },
-  { name: "Market & Gıda", icon: "shopping-cart", children: ["Market", "Manav/Kasap", "Online Market"] },
-  { name: "Ulaşım", icon: "car", children: ["Yakıt", "Toplu Taşıma", "Taksi", "Araç Bakım"] },
-  { name: "Yeme & İçme", icon: "utensils", children: ["Restoran", "Kafe", "Fast Food"] },
-  { name: "Sağlık", icon: "heart-pulse", children: ["İlaç", "Doktor", "Sigorta"] },
-  { name: "Eğlence", icon: "gamepad-2", children: ["Sinema/Tiyatro", "Abonelikler", "Hobi"] },
-  { name: "Giyim", icon: "shirt", children: ["Kıyafet", "Ayakkabı", "Aksesuar"] },
-  { name: "Eğitim", icon: "graduation-cap", children: ["Kurs", "Kitap", "Okul"] },
-  { name: "Diğer", icon: "ellipsis", children: [] },
+  { name: "Konut", icon: "home", children: ["Kira", "Aidat", "Tamirat/Bakim"] },
+  { name: "Faturalar", icon: "zap", children: ["Elektrik", "Su", "Dogalgaz", "Internet", "Telefon"] },
+  { name: "Market & Gida", icon: "shopping-cart", children: ["Market", "Manav/Kasap", "Online Market"] },
+  { name: "Ulasim", icon: "car", children: ["Yakit", "Toplu Tasima", "Taksi", "Arac Bakim"] },
+  { name: "Yeme & Icme", icon: "utensils", children: ["Restoran", "Kafe", "Fast Food"] },
+  { name: "Saglik", icon: "heart-pulse", children: ["Ilac", "Doktor", "Sigorta"] },
+  { name: "Eglence", icon: "gamepad-2", children: ["Sinema/Tiyatro", "Abonelikler", "Hobi"] },
+  { name: "Giyim", icon: "shirt", children: ["Kiyafet", "Ayakkabi", "Aksesuar"] },
+  { name: "Egitim", icon: "graduation-cap", children: ["Kurs", "Kitap", "Okul"] },
+  { name: "Diger", icon: "ellipsis", children: [] },
 ]
 
 export async function POST(req: Request) {
@@ -31,19 +32,25 @@ export async function POST(req: Request) {
     })
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: "Bu e-posta adresi zaten kayıtlı" },
-        { status: 409 }
-      )
+      return NextResponse.json({ error: "Bu e-posta adresi zaten kayitli" }, { status: 409 })
     }
+
+    const adminCount = await prisma.user.count({
+      where: { role: "ADMIN" },
+    })
 
     const hashedPassword = await hash(password, 12)
 
     const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword },
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role: adminCount === 0 ? "ADMIN" : "USER",
+      },
     })
 
-    for (let i = 0; i < CATEGORY_TREE.length; i++) {
+    for (let i = 0; i < CATEGORY_TREE.length; i += 1) {
       const main = CATEGORY_TREE[i]
       const parent = await prisma.category.create({
         data: {
@@ -56,7 +63,7 @@ export async function POST(req: Request) {
         },
       })
 
-      for (let j = 0; j < main.children.length; j++) {
+      for (let j = 0; j < main.children.length; j += 1) {
         await prisma.category.create({
           data: {
             name: main.children[j],
@@ -69,18 +76,30 @@ export async function POST(req: Request) {
       }
     }
 
+    await prisma.activityLog.create({
+      data: {
+        event: ActivityLogEvent.USER_CREATED,
+        targetUserId: user.id,
+        metadata: {
+          bootstrapRole: user.role,
+        },
+      },
+    })
+
     return NextResponse.json(
-      { message: "Kayıt başarılı", userId: user.id },
+      {
+        message: "Kayit basarili",
+        userId: user.id,
+        role: user.role,
+      },
       { status: 201 }
     )
   } catch (error) {
     if (error instanceof Error && error.name === "ZodError") {
-      return NextResponse.json({ error: "Geçersiz veri" }, { status: 400 })
+      return NextResponse.json({ error: "Gecersiz veri" }, { status: 400 })
     }
+
     logger.error("Register request failed", error)
-    return NextResponse.json(
-      { error: "Bir hata oluştu" },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: "Bir hata olustu" }, { status: 500 })
   }
 }

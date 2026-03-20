@@ -8,15 +8,89 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ActivityLogEvent {
+  LOGIN
+  USER_CREATED
+  USER_STATUS_CHANGED
+  USER_ROLE_CHANGED
+  BULK_USER_UPDATED
+  ADMIN_SETTINGS_UPDATED
+  ADMIN_EXPORT_CREATED
+  SAVED_VIEW_CREATED
+  SAVED_VIEW_UPDATED
+  SAVED_VIEW_DELETED
+}
+
+enum AdminSettingKey {
+  dashboardDefaultRange
+  activityRetentionDays
+  exportMaxRows
+  dbDegradedThresholdMs
+  dashboardCacheTtlSec
+  systemCacheTtlSec
+}
+
+enum AdminSavedViewScope {
+  DASHBOARD
+  ACTIVITY
+  USERS
+}
+
+enum RecurringFrequency {
+  WEEKLY
+  MONTHLY
+  CUSTOM_MONTH_DAY
+}
+
+enum ScheduledPaymentStatus {
+  PENDING
+  PAID
+  SKIPPED
+}
+
+enum ReminderChannel {
+  IN_APP
+  EMAIL
+}
+
+enum ReminderType {
+  PAYMENT_UPCOMING
+  MONTHLY_DIGEST
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  SKIPPED
+  FAILED
+}
+
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  password     String
-  name         String
-  createdAt    DateTime      @default(now())
-  transactions Transaction[]
-  categories   Category[]
-  goals        Goal[]
+  id                    String           @id @default(cuid())
+  email                 String           @unique
+  password              String
+  name                  String
+  role                  UserRole         @default(USER)
+  isActive              Boolean          @default(true)
+  lastLoginAt           DateTime?
+  createdAt             DateTime         @default(now())
+  transactions          Transaction[]
+  categories            Category[]
+  goals                 Goal[]
+  activityLogsAuthored  ActivityLog[]    @relation("ActivityActor")
+  activityLogsTargeted  ActivityLog[]    @relation("ActivityTarget")
+  adminSettingsUpdated  AdminSetting[]   @relation("AdminSettingUpdatedBy")
+  adminSavedViewsCreated AdminSavedView[] @relation("AdminSavedViewCreatedBy")
+  recurringRules        RecurringRule[]
+  scheduledPayments     ScheduledPayment[]
+  reminders             Reminder[]
+  notificationPreference NotificationPreference?
+  monthlyReports        MonthlyReport[]
 }
 
 model Category {
@@ -33,13 +107,15 @@ model Category {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
   goals        Goal[]
+  recurringRules RecurringRule[]
+  scheduledPayments ScheduledPayment[]
 
   @@unique([name, userId, parentId])
   @@index([userId, parentId, sortOrder])
 }
 
 model Transaction {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   type        String
   amount      Float
   description String?
@@ -47,8 +123,9 @@ model Transaction {
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  scheduledPayment ScheduledPayment? @relation("ScheduledPaymentTransaction")
 
   @@index([userId, date])
   @@index([userId, type, date])
@@ -60,21 +137,21 @@ model Goal {
   userId       String
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Hedef kapsamı: toplam bakiye mi kategori mi
+  // Goal scope: overall balance or category-specific.
   scope        String    // "OVERALL" | "CATEGORY"
 
-  // Periyot: aylık mı yıllık mı
+  // Goal period: monthly or yearly.
   period       String    // "MONTHLY" | "YEARLY"
 
-  // Kategori bazlı hedefler için
+  // Category reference for category-scoped goals.
   categoryId   String?
   category     Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  // Hedef tipi: tasarruf mu, maksimum harcama mı
+  // Goal direction: save or cap spending.
   direction    String    // "SAVE" | "SPEND_MAX"
   targetAmount Float
 
-  // Hangi zaman aralığı için geçerli
+  // Applicable time range.
   year         Int
   month        Int?
 
@@ -82,4 +159,148 @@ model Goal {
   updatedAt    DateTime  @updatedAt
 
   @@index([userId, year, month, scope, period])
+}
+
+model ActivityLog {
+  id           String           @id @default(cuid())
+  event        ActivityLogEvent
+  actorUserId  String?
+  actorUser    User?            @relation("ActivityActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  targetUserId String?
+  targetUser   User?            @relation("ActivityTarget", fields: [targetUserId], references: [id], onDelete: SetNull)
+  metadata     Json?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime         @default(now())
+
+  @@index([event, createdAt])
+  @@index([actorUserId, createdAt])
+  @@index([targetUserId, createdAt])
+}
+
+model AdminSetting {
+  key             AdminSettingKey @id
+  valueJson       Json
+  updatedByUserId String?
+  updatedByUser   User?           @relation("AdminSettingUpdatedBy", fields: [updatedByUserId], references: [id], onDelete: SetNull)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model AdminSavedView {
+  id              String             @id @default(cuid())
+  scope           AdminSavedViewScope
+  name            String
+  filtersJson     Json
+  isDefault       Boolean            @default(false)
+  createdByUserId String?
+  createdByUser   User?              @relation("AdminSavedViewCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([scope, isDefault, updatedAt])
+  @@index([createdByUserId, scope])
+}
+
+model RecurringRule {
+  id               String            @id @default(cuid())
+  name             String
+  type             String
+  amount           Float
+  description      String?
+  frequency        RecurringFrequency
+  customMonthDay   Int?
+  startsAt         DateTime
+  endsAt           DateTime?
+  isActive         Boolean           @default(true)
+  isSubscription   Boolean           @default(false)
+  reminderDaysBefore Int             @default(3)
+  categoryId       String?
+  category         Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  userId           String
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scheduledPayments ScheduledPayment[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([userId, isActive, frequency])
+  @@index([categoryId, isSubscription])
+}
+
+model ScheduledPayment {
+  id               String                 @id @default(cuid())
+  name             String
+  type             String
+  amount           Float
+  description      String?
+  dueDate          DateTime
+  status           ScheduledPaymentStatus @default(PENDING)
+  source           String                 @default("RECURRING")
+  paidAt           DateTime?
+  categoryId       String?
+  category         Category?              @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  recurringRuleId  String?
+  recurringRule    RecurringRule?         @relation(fields: [recurringRuleId], references: [id], onDelete: SetNull)
+  transactionId    String?                @unique
+  transaction      Transaction?           @relation("ScheduledPaymentTransaction", fields: [transactionId], references: [id], onDelete: SetNull)
+  userId           String
+  user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminders        Reminder[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  @@index([userId, dueDate, status])
+  @@index([categoryId, dueDate])
+  @@index([recurringRuleId, dueDate])
+}
+
+model Reminder {
+  id               String           @id @default(cuid())
+  type             ReminderType
+  channel          ReminderChannel
+  status           ReminderStatus   @default(PENDING)
+  sendAt           DateTime
+  sentAt           DateTime?
+  lastError        String?
+  scheduledPaymentId String?
+  scheduledPayment ScheduledPayment? @relation(fields: [scheduledPaymentId], references: [id], onDelete: Cascade)
+  monthlyReportId  String?
+  monthlyReport    MonthlyReport?   @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([userId, channel, status, sendAt])
+  @@index([scheduledPaymentId, channel, type])
+  @@index([monthlyReportId, channel, type])
+}
+
+model NotificationPreference {
+  userId            String   @id
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emailReminders    Boolean  @default(true)
+  emailMonthlyDigest Boolean @default(true)
+  reminderLeadDays  Int      @default(3)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model MonthlyReport {
+  id               String     @id @default(cuid())
+  title            String
+  summaryText      String
+  metricsJson      Json
+  highlightsJson   Json?
+  emailSentAt      DateTime?
+  year             Int
+  month            Int
+  userId           String
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminders        Reminder[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@unique([userId, year, month])
+  @@index([userId, createdAt])
 }

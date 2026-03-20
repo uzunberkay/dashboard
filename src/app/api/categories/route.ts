@@ -1,24 +1,36 @@
 import { NextResponse } from "next/server"
+import { revalidateTag, unstable_cache } from "next/cache"
 import { prisma } from "@/lib/prisma"
+import { CACHE_TAGS } from "@/lib/cache-tags"
 import { getAuthSession, unauthorized } from "@/lib/get-session"
 import { categorySchema } from "@/lib/validations"
 import { getRateLimitResponse } from "@/lib/rate-limit"
+
+const getCachedCategories = unstable_cache(
+  async (userId: string) =>
+    prisma.category.findMany({
+      where: { userId, parentId: null },
+      include: {
+        children: {
+          include: { _count: { select: { transactions: true } } },
+          orderBy: { sortOrder: "asc" },
+        },
+        _count: { select: { transactions: true } },
+      },
+      orderBy: { sortOrder: "asc" },
+    }),
+  ["categories-data-v1"],
+  {
+    revalidate: 60,
+    tags: [CACHE_TAGS.categories],
+  }
+)
 
 export async function GET() {
   const session = await getAuthSession()
   if (!session) return unauthorized()
 
-  const categories = await prisma.category.findMany({
-    where: { userId: session.user.id, parentId: null },
-    include: {
-      children: {
-        include: { _count: { select: { transactions: true } } },
-        orderBy: { sortOrder: "asc" },
-      },
-      _count: { select: { transactions: true } },
-    },
-    orderBy: { sortOrder: "asc" },
-  })
+  const categories = await getCachedCategories(session.user.id)
 
   return NextResponse.json(categories)
 }
@@ -67,6 +79,8 @@ export async function POST(req: Request) {
         userId: session.user.id,
       },
     })
+    revalidateTag(CACHE_TAGS.categories, "max")
+    revalidateTag(CACHE_TAGS.dashboard, "max")
 
     return NextResponse.json(category, { status: 201 })
   } catch (error: unknown) {

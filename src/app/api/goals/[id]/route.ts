@@ -1,18 +1,24 @@
+import { revalidateTag } from "next/cache"
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { CACHE_TAGS } from "@/lib/cache-tags"
 import { getAuthSession, unauthorized } from "@/lib/get-session"
-import { goalSchema } from "@/lib/validations"
+import { prisma } from "@/lib/prisma"
 import { getRateLimitResponse } from "@/lib/rate-limit"
+import { goalSchema } from "@/lib/validations"
 
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession()
-  if (!session) return unauthorized()
+  if (!session) {
+    return unauthorized()
+  }
 
   const rateLimitResponse = getRateLimitResponse(req, "goals", session.user.id)
-  if (rateLimitResponse) return rateLimitResponse
+  if (rateLimitResponse) {
+    return rateLimitResponse
+  }
 
   const { id } = await params
 
@@ -38,10 +44,7 @@ export async function PUT(
 
     const now = new Date()
     const year = parsed.year || now.getFullYear()
-    const month =
-      parsed.period === "MONTHLY"
-        ? parsed.month ?? now.getMonth() + 1
-        : null
+    const month = parsed.period === "MONTHLY" ? parsed.month ?? now.getMonth() + 1 : null
 
     const updated = await prisma.goal.updateMany({
       where: { id, userId: session.user.id },
@@ -57,7 +60,7 @@ export async function PUT(
     })
 
     if (updated.count === 0) {
-      return NextResponse.json({ error: "Hedef bulunamadı" }, { status: 404 })
+      return NextResponse.json({ error: "Hedef bulunamadi" }, { status: 404 })
     }
 
     const goal = await prisma.goal.findUnique({
@@ -65,22 +68,29 @@ export async function PUT(
       include: { category: { select: { id: true, name: true } } },
     })
 
+    revalidateTag(CACHE_TAGS.goals, "max")
+    revalidateTag(CACHE_TAGS.dashboard, "max")
+
     return NextResponse.json(goal)
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Geçersiz veri"
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Gecersiz veri"
     return NextResponse.json({ error: message }, { status: 400 })
   }
 }
 
 export async function DELETE(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession()
-  if (!session) return unauthorized()
+  if (!session) {
+    return unauthorized()
+  }
 
-  const rateLimitResponse = getRateLimitResponse(_req, "goals", session.user.id)
-  if (rateLimitResponse) return rateLimitResponse
+  const rateLimitResponse = getRateLimitResponse(req, "goals", session.user.id)
+  if (rateLimitResponse) {
+    return rateLimitResponse
+  }
 
   const { id } = await params
 
@@ -89,8 +99,11 @@ export async function DELETE(
   })
 
   if (deleted.count === 0) {
-    return NextResponse.json({ error: "Hedef bulunamadı" }, { status: 404 })
+    return NextResponse.json({ error: "Hedef bulunamadi" }, { status: 404 })
   }
+
+  revalidateTag(CACHE_TAGS.goals, "max")
+  revalidateTag(CACHE_TAGS.dashboard, "max")
 
   return NextResponse.json({ message: "Hedef silindi" })
 }

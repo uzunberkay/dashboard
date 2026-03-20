@@ -1,18 +1,24 @@
+import { revalidateTag } from "next/cache"
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { CACHE_TAGS } from "@/lib/cache-tags"
 import { getAuthSession, unauthorized } from "@/lib/get-session"
-import { categorySchema } from "@/lib/validations"
+import { prisma } from "@/lib/prisma"
 import { getRateLimitResponse } from "@/lib/rate-limit"
+import { categorySchema } from "@/lib/validations"
 
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession()
-  if (!session) return unauthorized()
+  if (!session) {
+    return unauthorized()
+  }
 
   const rateLimitResponse = getRateLimitResponse(req, "categories", session.user.id)
-  if (rateLimitResponse) return rateLimitResponse
+  if (rateLimitResponse) {
+    return rateLimitResponse
+  }
 
   const { id } = await params
 
@@ -25,7 +31,7 @@ export async function PUT(
     })
 
     if (!existing) {
-      return NextResponse.json({ error: "Kategori bulunamadı" }, { status: 404 })
+      return NextResponse.json({ error: "Kategori bulunamadi" }, { status: 404 })
     }
 
     const updateData: Record<string, unknown> = {
@@ -60,21 +66,28 @@ export async function PUT(
       data: updateData,
     })
 
+    revalidateTag(CACHE_TAGS.categories, "max")
+    revalidateTag(CACHE_TAGS.dashboard, "max")
+
     return NextResponse.json(updated)
   } catch {
-    return NextResponse.json({ error: "Geçersiz veri" }, { status: 400 })
+    return NextResponse.json({ error: "Gecersiz veri" }, { status: 400 })
   }
 }
 
 export async function DELETE(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession()
-  if (!session) return unauthorized()
+  if (!session) {
+    return unauthorized()
+  }
 
-  const rateLimitResponse = getRateLimitResponse(_req, "categories", session.user.id)
-  if (rateLimitResponse) return rateLimitResponse
+  const rateLimitResponse = getRateLimitResponse(req, "categories", session.user.id)
+  if (rateLimitResponse) {
+    return rateLimitResponse
+  }
 
   const { id } = await params
 
@@ -83,24 +96,22 @@ export async function DELETE(
   })
 
   if (!existing) {
-    return NextResponse.json({ error: "Kategori bulunamadı" }, { status: 404 })
+    return NextResponse.json({ error: "Kategori bulunamadi" }, { status: 404 })
   }
 
   if (existing.isSystem) {
-    return NextResponse.json(
-      { error: "Sistem kategorileri silinemez" },
-      { status: 403 }
-    )
+    return NextResponse.json({ error: "Sistem kategorileri silinemez" }, { status: 403 })
   }
 
   if (!existing.parentId) {
-    return NextResponse.json(
-      { error: "Ana kategoriler silinemez" },
-      { status: 403 }
-    )
+    return NextResponse.json({ error: "Ana kategoriler silinemez" }, { status: 403 })
   }
 
   await prisma.category.delete({ where: { id } })
 
+  revalidateTag(CACHE_TAGS.categories, "max")
+  revalidateTag(CACHE_TAGS.dashboard, "max")
+
   return NextResponse.json({ message: "Kategori silindi" })
 }
+

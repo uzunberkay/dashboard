@@ -17,7 +17,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-base">Son İşlemler</CardTitle>
-        <Link href="/transactions">
+        <Link href="/transactions" prefetch>
           <Button variant="ghost" size="sm">
             Tümünü Gör <ArrowRight className="ml-1 h-4 w-4" />
           </Button>

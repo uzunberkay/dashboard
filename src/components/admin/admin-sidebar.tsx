@@ -1,0 +1,122 @@
+"use client"
+
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import {
+  Activity,
+  Files,
+  LayoutDashboard,
+  PanelLeftClose,
+  ServerCog,
+  Settings,
+  Shield,
+  Users,
+  WalletCards,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+const navigation = [
+  { name: "Genel bakis", href: "/admin", icon: LayoutDashboard },
+  { name: "Kullanicilar", href: "/admin/users", icon: Users },
+  { name: "Aktivite", href: "/admin/activity", icon: Activity },
+  { name: "Raporlar", href: "/admin/reports", icon: Files },
+  { name: "Sistem", href: "/admin/system", icon: ServerCog },
+  { name: "Ayarlar", href: "/admin/settings", icon: Settings },
+]
+
+interface AdminSidebarProps {
+  open: boolean
+  onClose: () => void
+}
+
+export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
+  const pathname = usePathname()
+
+  return (
+    <>
+      {open && (
+        <button
+          type="button"
+          aria-label="Admin gezinmesini kapat"
+          onClick={onClose}
+          className="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-sm lg:hidden"
+        />
+      )}
+
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex w-80 flex-col border-r border-slate-200/70 bg-[linear-gradient(180deg,rgba(248,250,252,0.96)_0%,rgba(241,245,249,0.9)_100%)] text-slate-900 shadow-2xl transition-transform duration-200 ease-out dark:border-slate-800 dark:bg-[linear-gradient(180deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.92)_100%)] dark:text-slate-100 lg:static lg:translate-x-0 lg:shadow-none",
+          open ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <div className="flex h-20 items-center gap-4 border-b border-current/10 px-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-lg shadow-slate-950/10 dark:bg-slate-100 dark:text-slate-950">
+            <Shield className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+              Admin paneli
+            </p>
+            <p className="truncate text-lg font-semibold">Tuna Yonetim Merkezi</p>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-auto rounded-xl lg:hidden"
+            onClick={onClose}
+            type="button"
+          >
+            <PanelLeftClose className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="px-5 pt-5">
+          <div className="rounded-[26px] border border-slate-200/70 bg-white/80 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <WalletCards className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold">Platform operasyonlari</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Izleme, kullanicilar ve yonetisim</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex-1 space-y-1 px-4 py-5">
+          {navigation.map((item) => {
+            const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href))
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onClose}
+                className={cn(
+                  "group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-all",
+                  isActive
+                    ? "bg-slate-950 text-white shadow-lg shadow-slate-950/10 dark:bg-slate-100 dark:text-slate-950"
+                    : "text-slate-600 hover:bg-white/80 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-900/80 dark:hover:text-slate-50"
+                )}
+              >
+                <span
+                  className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-xl transition-colors",
+                    isActive
+                      ? "bg-white/15 text-white dark:bg-slate-950/10 dark:text-slate-950"
+                      : "bg-slate-100 text-slate-500 group-hover:bg-slate-950/5 group-hover:text-slate-950 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-slate-700 dark:group-hover:text-slate-100"
+                  )}
+                >
+                  <item.icon className="h-4 w-4" />
+                </span>
+                {item.name}
+              </Link>
+            )
+          })}
+        </nav>
+      </aside>
+    </>
+  )
+}

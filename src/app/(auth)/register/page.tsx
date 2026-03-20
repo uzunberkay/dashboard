@@ -81,7 +81,7 @@ export default function RegisterPage() {
       footer={(
         <p>
           Zaten hesabiniz var mi?{" "}
-          <Link href="/login" className="font-semibold text-slate-950 transition hover:text-primary">
+          <Link href="/login" prefetch className="font-semibold text-slate-950 transition hover:text-primary">
             Giris yap
           </Link>
         </p>
@@ -110,7 +110,7 @@ export default function RegisterPage() {
               autoFocus
               placeholder="Adinizi ve soyadinizi girin"
               required
-              className="h-14 rounded-2xl border-slate-200/80 bg-slate-50/75 px-4 text-[15px] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] placeholder:text-slate-400 focus-visible:border-slate-300 focus-visible:ring-2 focus-visible:ring-slate-950/8"
+              className="h-14 rounded-2xl border-slate-200/80 bg-slate-50/75 px-4 text-[15px] text-slate-900 caret-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] placeholder:text-slate-400 focus-visible:border-slate-300 focus-visible:ring-2 focus-visible:ring-slate-950/8"
             />
           </div>
 
@@ -126,7 +126,7 @@ export default function RegisterPage() {
               autoComplete="email"
               placeholder="ornek@email.com"
               required
-              className="h-14 rounded-2xl border-slate-200/80 bg-slate-50/75 px-4 text-[15px] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] placeholder:text-slate-400 focus-visible:border-slate-300 focus-visible:ring-2 focus-visible:ring-slate-950/8"
+              className="h-14 rounded-2xl border-slate-200/80 bg-slate-50/75 px-4 text-[15px] text-slate-900 caret-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] placeholder:text-slate-400 focus-visible:border-slate-300 focus-visible:ring-2 focus-visible:ring-slate-950/8"
             />
           </div>
 
@@ -145,7 +145,7 @@ export default function RegisterPage() {
               placeholder="Guclu bir parola belirleyin"
               required
               disabled={loading}
-              className="h-14 rounded-2xl border-slate-200/80 bg-slate-50/75 px-4 text-[15px] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] placeholder:text-slate-400 focus-visible:border-slate-300 focus-visible:ring-2 focus-visible:ring-slate-950/8"
+              className="h-14 rounded-2xl border-slate-200/80 bg-slate-50/75 px-4 text-[15px] text-slate-900 caret-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] placeholder:text-slate-400 focus-visible:border-slate-300 focus-visible:ring-2 focus-visible:ring-slate-950/8"
             />
             <p className="text-xs leading-6 text-slate-500">
               Hesabiniz olustuktan sonra ilk butce kontrol paneliniz aninda hazir olur.

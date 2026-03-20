@@ -9,57 +9,57 @@ const CATEGORY_TREE = [
   {
     name: "Konut",
     icon: "home",
-    children: ["Kira", "Aidat", "Tamirat/Bakım"],
+    children: ["Kira", "Aidat", "Tamirat/Bakim"],
   },
   {
     name: "Faturalar",
     icon: "zap",
-    children: ["Elektrik", "Su", "Doğalgaz", "İnternet", "Telefon"],
+    children: ["Elektrik", "Su", "Dogalgaz", "Internet", "Telefon"],
   },
   {
-    name: "Market & Gıda",
+    name: "Market & Gida",
     icon: "shopping-cart",
     children: ["Market", "Manav/Kasap", "Online Market"],
   },
   {
-    name: "Ulaşım",
+    name: "Ulasim",
     icon: "car",
-    children: ["Yakıt", "Toplu Taşıma", "Taksi", "Araç Bakım"],
+    children: ["Yakit", "Toplu Tasima", "Taksi", "Arac Bakim"],
   },
   {
-    name: "Yeme & İçme",
+    name: "Yeme & Icme",
     icon: "utensils",
     children: ["Restoran", "Kafe", "Fast Food"],
   },
   {
-    name: "Sağlık",
+    name: "Saglik",
     icon: "heart-pulse",
-    children: ["İlaç", "Doktor", "Sigorta"],
+    children: ["Ilac", "Doktor", "Sigorta"],
   },
   {
-    name: "Eğlence",
+    name: "Eglence",
     icon: "gamepad-2",
     children: ["Sinema/Tiyatro", "Abonelikler", "Hobi"],
   },
   {
     name: "Giyim",
     icon: "shirt",
-    children: ["Kıyafet", "Ayakkabı", "Aksesuar"],
+    children: ["Kiyafet", "Ayakkabi", "Aksesuar"],
   },
   {
-    name: "Eğitim",
+    name: "Egitim",
     icon: "graduation-cap",
     children: ["Kurs", "Kitap", "Okul"],
   },
   {
-    name: "Diğer",
+    name: "Diger",
     icon: "ellipsis",
     children: [],
   },
 ]
 
 export async function seedCategoriesForUser(userId: string) {
-  for (let i = 0; i < CATEGORY_TREE.length; i++) {
+  for (let i = 0; i < CATEGORY_TREE.length; i += 1) {
     const main = CATEGORY_TREE[i]
     const parent = await prisma.category.create({
       data: {
@@ -72,7 +72,7 @@ export async function seedCategoriesForUser(userId: string) {
       },
     })
 
-    for (let j = 0; j < main.children.length; j++) {
+    for (let j = 0; j < main.children.length; j += 1) {
       await prisma.category.create({
         data: {
           name: main.children[j],
@@ -97,7 +97,7 @@ async function main() {
   })
 
   if (existingUser) {
-    console.log("Demo kullanıcı zaten mevcut, seed atlanıyor.")
+    console.log("Demo kullanici zaten mevcut, seed atlaniyor.")
     return
   }
 
@@ -107,19 +107,20 @@ async function main() {
     data: {
       email: "demo@example.com",
       password: hashedPassword,
-      name: "Demo Kullanıcı",
+      name: "Demo Kullanici",
+      role: "ADMIN",
     },
   })
 
   await seedCategoriesForUser(user.id)
 
-  console.log(`Demo kullanıcı oluşturuldu: ${user.email}`)
-  console.log("Hiyerarşik kategoriler oluşturuldu.")
+  console.log(`Demo kullanici olusturuldu: ${user.email}`)
+  console.log("Hiyerarsik kategoriler olusturuldu.")
 }
 
 main()
-  .catch((e) => {
-    console.error(e)
+  .catch((error) => {
+    console.error(error)
     process.exit(1)
   })
   .finally(async () => {
