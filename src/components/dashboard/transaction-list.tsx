@@ -19,7 +19,7 @@ export const TransactionList = memo(function TransactionList({
   periodLabel,
 }: TransactionListProps) {
   return (
-    <Card className="h-full rounded-[24px] border-border/70 bg-card/95">
+    <Card className="h-full rounded-[24px]">
       <CardHeader className="flex flex-row items-center justify-between gap-3 p-5">
         <div className="space-y-1">
           <CardTitle className="text-base font-semibold">Son islemler</CardTitle>
@@ -37,7 +37,7 @@ export const TransactionList = memo(function TransactionList({
 
       <CardContent className="space-y-3 p-5 pt-0">
         {transactions.length === 0 ? (
-          <div className="flex min-h-44 flex-col items-center justify-center rounded-xl border border-dashed border-border/80 bg-muted/30 px-4 text-center">
+          <div className="flex min-h-44 flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.02] px-4 text-center">
             <Landmark className="mb-3 h-8 w-8 text-muted-foreground" />
             <p className="text-sm font-medium">Secili ay icin islem bulunmuyor</p>
             <p className="text-xs text-muted-foreground">
@@ -51,7 +51,7 @@ export const TransactionList = memo(function TransactionList({
             return (
               <article
                 key={transaction.id}
-                className="group flex items-center gap-3 rounded-xl border border-border/60 bg-background/70 p-3 transition-colors hover:bg-muted/40"
+                className="group flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3 backdrop-blur-sm transition-all hover:bg-white/[0.07]"
               >
                 <div
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${

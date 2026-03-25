@@ -8,7 +8,7 @@ export default function CategoriesLoading() {
 
       <div className="space-y-4">
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="h-24 animate-pulse rounded-xl border border-border/70 bg-card/70" />
+          <div key={index} className="h-24 animate-pulse rounded-xl border " />
         ))}
       </div>
     </div>

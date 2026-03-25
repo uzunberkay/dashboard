@@ -33,7 +33,7 @@ export function HealthScoreCard({ healthScore }: { healthScore: DashboardHealthS
           : "text-expense"
 
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/95">
+    <Card className="rounded-[24px] border-white/[0.08] bg-card/95">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <Gauge className="h-4 w-4 text-primary" />
@@ -43,7 +43,7 @@ export function HealthScoreCard({ healthScore }: { healthScore: DashboardHealthS
       </CardHeader>
       <CardContent className="space-y-4 p-5 pt-0">
         <div className="grid gap-4 sm:grid-cols-[140px_minmax(0,1fr)] sm:items-center">
-          <div className="flex flex-col items-center justify-center rounded-[24px] border border-border/70 bg-background/60 px-4 py-5 text-center">
+          <div className="flex flex-col items-center justify-center rounded-[24px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-5 text-center">
             <p className={cn("text-5xl font-semibold tracking-tight", scoreTone)}>{healthScore.score}</p>
             <p className="mt-2 text-sm font-medium">{healthScore.label}</p>
           </div>
@@ -51,7 +51,7 @@ export function HealthScoreCard({ healthScore }: { healthScore: DashboardHealthS
             {healthScore.drivers.map((driver) => (
               <div
                 key={driver.label}
-                className="flex items-center justify-between rounded-[18px] border border-border/70 bg-background/60 px-4 py-3"
+                className="flex items-center justify-between rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3"
               >
                 <div>
                   <p className="text-sm font-medium">{driver.label}</p>
@@ -80,7 +80,7 @@ export function HealthScoreCard({ healthScore }: { healthScore: DashboardHealthS
 
 export function ActionCenterCard({ items }: { items: DashboardActionItem[] }) {
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/95">
+    <Card className="rounded-[24px] border-white/[0.08] bg-card/95">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <Compass className="h-4 w-4 text-primary" />
@@ -99,7 +99,7 @@ export function ActionCenterCard({ items }: { items: DashboardActionItem[] }) {
           items.map((item) => (
             <div
               key={item.id}
-              className="rounded-[20px] border border-border/70 bg-background/55 p-4 shadow-sm"
+              className="rounded-[20px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4 shadow-sm"
             >
               <div className="flex flex-wrap items-center gap-2">
                 <StatusBadge
@@ -183,7 +183,7 @@ export function ReminderStrip({ reminders }: { reminders: Reminder[] }) {
 
 export function AnomalyPanel({ anomalies }: { anomalies: DashboardAnomaly[] }) {
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/95">
+    <Card className="rounded-[24px] border-white/[0.08] bg-card/95">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-primary" />
@@ -202,7 +202,7 @@ export function AnomalyPanel({ anomalies }: { anomalies: DashboardAnomaly[] }) {
           anomalies.map((anomaly) => (
             <div
               key={anomaly.id}
-              className="rounded-[20px] border border-border/70 bg-background/55 p-4 shadow-sm"
+              className="rounded-[20px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4 shadow-sm"
             >
               <div className="flex items-center justify-between gap-3">
                 <p className="text-sm font-medium">{anomaly.title}</p>
@@ -228,7 +228,7 @@ export function AnomalyPanel({ anomalies }: { anomalies: DashboardAnomaly[] }) {
 
 export function ForecastPanel({ forecast }: { forecast: DashboardForecast }) {
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/95">
+    <Card className="rounded-[24px] border-white/[0.08] bg-card/95">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <Activity className="h-4 w-4 text-primary" />
@@ -240,7 +240,7 @@ export function ForecastPanel({ forecast }: { forecast: DashboardForecast }) {
       </CardHeader>
       <CardContent className="space-y-4 p-5 pt-0">
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-4">
+          <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-4">
             <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Beklenen gider</p>
             <p className="mt-2 text-2xl font-semibold tracking-tight">
               {formatCurrency(forecast.expectedExpense)}
@@ -249,7 +249,7 @@ export function ForecastPanel({ forecast }: { forecast: DashboardForecast }) {
               {forecast.remainingDays} gunluk alan kaldigi varsayiliyor.
             </p>
           </div>
-          <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-4">
+          <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-4">
             <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Beklenen bakiye</p>
             <p
               className={cn(
@@ -264,7 +264,7 @@ export function ForecastPanel({ forecast }: { forecast: DashboardForecast }) {
             </p>
           </div>
         </div>
-        <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-4">
+        <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-4">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm font-medium">Tahmini hedef durumu</p>
             <StatusBadge

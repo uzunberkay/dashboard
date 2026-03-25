@@ -27,7 +27,7 @@ export default async function AdminSystemPage() {
       />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground">API sagligi</CardTitle>
           </CardHeader>
@@ -42,7 +42,7 @@ export default async function AdminSystemPage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground">Veritabani</CardTitle>
           </CardHeader>
@@ -59,7 +59,7 @@ export default async function AdminSystemPage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground">Bekleyen onaylar</CardTitle>
           </CardHeader>
@@ -74,7 +74,7 @@ export default async function AdminSystemPage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground">DB yanit suresi</CardTitle>
           </CardHeader>
@@ -89,25 +89,25 @@ export default async function AdminSystemPage() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader className="space-y-2">
             <CardTitle>Policy ozetleri</CardTitle>
             <p className="text-sm text-muted-foreground">Ortam: {environmentLabel}</p>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+            <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Aktivite retention</p>
               <p className="mt-2 text-lg font-semibold">{data.policies.activityRetentionDays} gun</p>
             </div>
-            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+            <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Export limiti</p>
               <p className="mt-2 text-lg font-semibold">{data.policies.exportMaxRows} satir</p>
             </div>
-            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+            <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Dashboard cache</p>
               <p className="mt-2 text-lg font-semibold">{data.policies.dashboardCacheTtlSec}s</p>
             </div>
-            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+            <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">System cache</p>
               <p className="mt-2 text-lg font-semibold">{data.policies.systemCacheTtlSec}s</p>
             </div>
@@ -121,28 +121,28 @@ export default async function AdminSystemPage() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader className="space-y-2">
             <CardTitle>Approval metrikleri</CardTitle>
             <p className="text-sm text-muted-foreground">Pending, sensitive ve expired dagilimini izleyin.</p>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+            <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Pending</p>
               <p className="mt-2 text-lg font-semibold">{data.approvals.pendingCount}</p>
             </div>
-            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+            <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Sensitive</p>
               <p className="mt-2 text-lg font-semibold">{data.approvals.sensitivePendingCount}</p>
             </div>
-            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+            <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Expired</p>
               <p className="mt-2 text-lg font-semibold">{data.approvals.expiredCount}</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader className="space-y-2">
             <CardTitle>Son hatalar</CardTitle>
             <p className="text-sm text-muted-foreground">
@@ -151,12 +151,12 @@ export default async function AdminSystemPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             {data.recentErrors.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-border/70 px-4 py-8 text-center text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-dashed border-white/[0.08] px-4 py-8 text-center text-sm text-muted-foreground">
                 Son hata kaydi bulunmuyor.
               </div>
             ) : (
               data.recentErrors.map((error, index) => (
-                <div key={`${error.timestamp}-${index}`} className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+                <div key={`${error.timestamp}-${index}`} className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <p className="font-medium">{error.message}</p>
                     <span className="text-xs text-muted-foreground">{formatDateTime(error.timestamp)}</span>

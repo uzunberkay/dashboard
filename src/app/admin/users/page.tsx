@@ -103,7 +103,7 @@ export default async function AdminUsersPage({
         )}
       />
 
-      <div className="rounded-[26px] border border-border/70 bg-card/85 p-5 shadow-sm">
+      <div className="rounded-[26px] border border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06] p-5 shadow-sm">
         <div className="mb-4 flex flex-wrap gap-2">
           {quickSegments.map((segment) => (
             <Button key={segment.label} asChild variant="outline" size="sm" className="rounded-full">

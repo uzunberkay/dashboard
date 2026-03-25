@@ -23,7 +23,7 @@ import type { DashboardData } from "@/types"
 
 export function CalendarPanel({ data }: { data: DashboardData }) {
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/95">
+    <Card className="rounded-[24px] border-white/[0.08] bg-card/95">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <CalendarClock className="h-4 w-4 text-primary" />
@@ -42,7 +42,7 @@ export function CalendarPanel({ data }: { data: DashboardData }) {
           data.calendar.slice(0, 10).map((entry) => (
             <div
               key={entry.id}
-              className="flex items-start justify-between gap-3 rounded-[18px] border border-border/70 bg-background/55 px-4 py-3"
+              className="flex items-start justify-between gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3"
             >
               <div>
                 <p className="text-sm font-medium">{entry.label}</p>
@@ -81,7 +81,7 @@ export function CalendarPanel({ data }: { data: DashboardData }) {
 
 export function SubscriptionPanel({ data }: { data: DashboardData }) {
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/95">
+    <Card className="rounded-[24px] border-white/[0.08] bg-card/95">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <ReceiptText className="h-4 w-4 text-primary" />
@@ -93,17 +93,17 @@ export function SubscriptionPanel({ data }: { data: DashboardData }) {
       </CardHeader>
       <CardContent className="space-y-4 p-5 pt-0">
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+          <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
             <p className="text-xs text-muted-foreground">Aktif abonelik</p>
             <p className="mt-1 text-lg font-semibold">{data.subscriptions.totalActive}</p>
           </div>
-          <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+          <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
             <p className="text-xs text-muted-foreground">Aylik tahmini cikis</p>
             <p className="mt-1 text-lg font-semibold">
               {formatCurrency(data.subscriptions.monthlyCommitment)}
             </p>
           </div>
-          <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+          <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
             <p className="text-xs text-muted-foreground">Yaklasan planli odeme</p>
             <p className="mt-1 text-lg font-semibold">{data.subscriptions.upcomingCount}</p>
           </div>
@@ -126,7 +126,7 @@ export function SubscriptionPanel({ data }: { data: DashboardData }) {
             {data.subscriptions.items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between gap-3 rounded-[18px] border border-border/70 bg-background/55 px-4 py-3"
+                className="flex items-center justify-between gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3"
               >
                 <div>
                   <p className="text-sm font-medium">{item.name}</p>
@@ -147,7 +147,7 @@ export function SubscriptionPanel({ data }: { data: DashboardData }) {
 
 export function DigestPreviewCard({ data }: { data: DashboardData }) {
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/95">
+    <Card className="rounded-[24px] border-white/[0.08] bg-card/95">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <ClipboardList className="h-4 w-4 text-primary" />
@@ -158,7 +158,7 @@ export function DigestPreviewCard({ data }: { data: DashboardData }) {
         </p>
       </CardHeader>
       <CardContent className="space-y-4 p-5 pt-0">
-        <div className="rounded-[20px] border border-border/70 bg-background/55 p-4">
+        <div className="rounded-[20px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
           <p className="text-sm font-medium">{data.monthlyDigestPreview.title}</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
             {data.monthlyDigestPreview.summary}
@@ -168,7 +168,7 @@ export function DigestPreviewCard({ data }: { data: DashboardData }) {
           {data.monthlyDigestPreview.highlights.map((item) => (
             <div
               key={item}
-              className="rounded-[16px] border border-border/70 bg-background/55 px-4 py-3 text-sm text-muted-foreground"
+              className="rounded-[16px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3 text-sm text-muted-foreground"
             >
               {item}
             </div>
@@ -210,7 +210,7 @@ export function SimulatorCard({ data }: { data: DashboardData }) {
   }, [cancelSubscriptionId, data, incomeLift, topCategoryCut])
 
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/95">
+    <Card className="rounded-[24px] border-white/[0.08] bg-card/95">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-primary" />
@@ -222,7 +222,7 @@ export function SimulatorCard({ data }: { data: DashboardData }) {
       </CardHeader>
       <CardContent className="space-y-4 p-5 pt-0">
         <div className="grid gap-3 md:grid-cols-3">
-          <label className="space-y-2 rounded-[18px] border border-border/70 bg-background/55 p-4">
+          <label className="space-y-2 rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <span className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
               Gelir artisi
             </span>
@@ -235,7 +235,7 @@ export function SimulatorCard({ data }: { data: DashboardData }) {
               className="h-10 w-full rounded-xl border border-input bg-background px-3 text-sm outline-none"
             />
           </label>
-          <label className="space-y-2 rounded-[18px] border border-border/70 bg-background/55 p-4">
+          <label className="space-y-2 rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <span className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
               Top kategori kesintisi
             </span>
@@ -249,12 +249,12 @@ export function SimulatorCard({ data }: { data: DashboardData }) {
               className="h-10 w-full rounded-xl border border-input bg-background px-3 text-sm outline-none"
             />
           </label>
-          <div className="space-y-2 rounded-[18px] border border-border/70 bg-background/55 p-4">
+          <div className="space-y-2 rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <span className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
               Iptal edilen abonelik
             </span>
             <Select value={cancelSubscriptionId} onValueChange={setCancelSubscriptionId}>
-              <SelectTrigger className="rounded-xl border-border/70 bg-background/70">
+              <SelectTrigger className="rounded-xl border-white/[0.08] bg-white/[0.04] backdrop-blur-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -270,11 +270,11 @@ export function SimulatorCard({ data }: { data: DashboardData }) {
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">
-          <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-4">
+          <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-4">
             <p className="text-xs text-muted-foreground">Yeni beklenen gider</p>
             <p className="mt-2 text-xl font-semibold">{formatCurrency(simulation.simulatedExpense)}</p>
           </div>
-          <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-4">
+          <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-4">
             <p className="text-xs text-muted-foreground">Yeni beklenen bakiye</p>
             <p
               className={cn(
@@ -285,7 +285,7 @@ export function SimulatorCard({ data }: { data: DashboardData }) {
               {formatCurrency(simulation.simulatedBalance)}
             </p>
           </div>
-          <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-4">
+          <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-4">
             <p className="text-xs text-muted-foreground">Yeni tasarruf orani</p>
             <p className="mt-2 text-xl font-semibold">%{simulation.simulatedSavingsRate.toFixed(1)}</p>
           </div>
@@ -302,7 +302,7 @@ export function SimulatorCard({ data }: { data: DashboardData }) {
 
 export function PriorityPanel({ data }: { data: DashboardData }) {
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/95">
+    <Card className="rounded-[24px] border-white/[0.08] bg-card/95">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-primary" />
@@ -321,7 +321,7 @@ export function PriorityPanel({ data }: { data: DashboardData }) {
           data.personalPriorities.map((item, index) => (
             <div
               key={item.id}
-              className="flex items-start gap-3 rounded-[18px] border border-border/70 bg-background/55 px-4 py-3"
+              className="flex items-start gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3"
             >
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
                 {index + 1}

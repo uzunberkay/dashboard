@@ -11,7 +11,7 @@ export function AdminTopCategoriesPanel({ items }: AdminTopCategoriesPanelProps)
   const maxValue = Math.max(1, ...items.map((item) => item.totalAmount ?? 0))
 
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/90">
+    <Card>
       <CardHeader className="space-y-2">
         <CardTitle className="text-lg">Platform capinda yukselen kategoriler</CardTitle>
         <p className="text-sm text-muted-foreground">
@@ -20,7 +20,7 @@ export function AdminTopCategoriesPanel({ items }: AdminTopCategoriesPanelProps)
       </CardHeader>
       <CardContent className="space-y-4">
         {items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border/70 px-4 py-8 text-center text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-white/[0.08] px-4 py-8 text-center text-sm text-muted-foreground">
             Secili filtrede kategori hareketi bulunmuyor.
           </div>
         ) : (

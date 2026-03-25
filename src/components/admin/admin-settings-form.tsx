@@ -121,7 +121,7 @@ export function AdminSettingsForm({ definitions, values }: AdminSettingsFormProp
   }
 
   return (
-    <div className="rounded-[24px] border border-border/70 bg-card/90 p-5 shadow-sm">
+    <div className="rounded-[24px] border border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06] p-5 shadow-sm">
       <div className="mb-5">
         <p className="text-sm font-semibold">Duzenlenebilir admin policy ayarlari</p>
         <p className="text-sm text-muted-foreground">
@@ -131,7 +131,7 @@ export function AdminSettingsForm({ definitions, values }: AdminSettingsFormProp
 
       <div className="grid gap-4 lg:grid-cols-2">
         {definitions.map((definition) => (
-          <div key={definition.key} className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+          <div key={definition.key} className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <div className="space-y-2">
               <p className="text-sm font-semibold">{definition.label}</p>
               <p className="text-sm text-muted-foreground">{definition.description}</p>
@@ -165,7 +165,7 @@ export function AdminSettingsForm({ definitions, values }: AdminSettingsFormProp
         ))}
       </div>
 
-      <div className="mt-5 rounded-[22px] border border-border/70 bg-background/70 p-4">
+      <div className="mt-5 rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
         <p className="text-sm font-semibold">Onay gerekcesi</p>
         <p className="mt-1 text-sm text-muted-foreground">
           Kritik ayar degisiklikleri dogrudan uygulanmaz; ikinci admin onayi icin net bir not birakin.

@@ -24,7 +24,7 @@ export function AdminKpiCard({
   tone = "default",
 }: AdminKpiCardProps) {
   return (
-    <Card className="overflow-hidden rounded-[24px] border-border/70 bg-card/90">
+    <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4">
         <div className="space-y-1">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>

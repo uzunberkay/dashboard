@@ -15,7 +15,7 @@ interface TransactionListProps {
 export function TransactionList({ transactions, onEdit, onDelete }: TransactionListProps) {
   if (transactions.length === 0) {
     return (
-      <div className="flex min-h-48 flex-col items-center justify-center rounded-[22px] border border-dashed border-border/80 bg-muted/20 px-6 py-12 text-center">
+      <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.1] bg-white/[0.02] px-6 py-12 text-center">
         <p className="text-sm font-medium">Bu filtrelere uygun islem bulunamadi.</p>
         <p className="mt-1 text-xs text-muted-foreground">
           Filtreleri genisleterek veya yeni kayit ekleyerek listeyi doldurabilirsiniz.
@@ -32,13 +32,13 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
         return (
           <div
             key={transaction.id}
-            className="group flex items-center gap-4 rounded-[22px] border border-border/70 bg-background/65 p-4 transition-colors hover:bg-accent/40"
+            className="group flex items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-sm transition-all hover:bg-white/[0.08]"
           >
             <div
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl backdrop-blur-sm ${
                 isIncome
-                  ? "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400"
-                  : "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400"
+                  ? "bg-income/15 text-income shadow-income/10 dark:bg-income/20"
+                  : "bg-expense/15 text-expense shadow-expense/10 dark:bg-expense/20"
               }`}
             >
               {isIncome ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
@@ -59,8 +59,8 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
             </div>
 
             <p
-              className={`whitespace-nowrap text-sm font-semibold ${
-                isIncome ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+              className={`whitespace-nowrap text-sm font-bold ${
+                isIncome ? "text-income" : "text-expense"
               }`}
             >
               {isIncome ? "+" : "-"}

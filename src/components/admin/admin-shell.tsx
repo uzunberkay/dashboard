@@ -18,9 +18,15 @@ export function AdminShell({ currentAdmin, children }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.12),transparent_28%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.12),transparent_24%)]">
+    <div className="relative flex min-h-screen bg-background">
+      {/* Background gradient orbs */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full bg-primary/[0.06] blur-[120px]" />
+        <div className="absolute -right-32 top-1/3 h-[500px] w-[500px] rounded-full bg-income/[0.04] blur-[100px]" />
+        <div className="absolute bottom-0 left-1/3 h-[400px] w-[400px] rounded-full bg-warning/[0.03] blur-[100px]" />
+      </div>
       <AdminSidebar role={currentAdmin.role} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
+      <div className="relative z-10 flex min-h-screen min-w-0 flex-1 flex-col">
         <AdminTopbar
           name={currentAdmin.name}
           email={currentAdmin.email}

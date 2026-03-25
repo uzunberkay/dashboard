@@ -9,7 +9,7 @@ interface AdminAnomalyPanelProps {
 
 export function AdminAnomalyPanel({ items }: AdminAnomalyPanelProps) {
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/90">
+    <Card>
       <CardHeader className="space-y-2">
         <CardTitle className="text-lg">Uyari ve anomali merkezi</CardTitle>
         <p className="text-sm text-muted-foreground">
@@ -18,7 +18,7 @@ export function AdminAnomalyPanel({ items }: AdminAnomalyPanelProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {items.map((item) => (
-          <div key={item.id} className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+          <div key={item.id} className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">

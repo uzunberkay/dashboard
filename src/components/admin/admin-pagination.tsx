@@ -33,7 +33,7 @@ export function AdminPagination({
   searchParams,
 }: AdminPaginationProps) {
   return (
-    <div className="flex flex-col gap-3 rounded-[24px] border border-border/70 bg-card/85 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 rounded-[24px] border border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-sm text-muted-foreground">
         Sayfa <span className="font-semibold text-foreground">{page}</span> / {totalPages}
       </p>

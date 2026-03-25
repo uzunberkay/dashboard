@@ -87,6 +87,17 @@
   --surface-foreground: oklch(0.25 0.01 255);
   --glow-primary: oklch(0.81 0.06 252 / 0.25);
   --glow-secondary: oklch(0.88 0.04 152 / 0.2);
+  --glow-accent: oklch(0.85 0.08 90 / 0.15);
+  --glass-bg: oklch(1 0 0 / 0.65);
+  --glass-bg-subtle: oklch(1 0 0 / 0.45);
+  --glass-bg-strong: oklch(1 0 0 / 0.8);
+  --glass-border: oklch(1 0 0 / 0.18);
+  --glass-border-subtle: oklch(1 0 0 / 0.1);
+  --glass-shadow: 0 8px 32px oklch(0.15 0 0 / 0.06);
+  --glass-shadow-lg: 0 24px 64px oklch(0.15 0 0 / 0.1);
+  --glass-shadow-glow: 0 0 40px oklch(0.48 0.12 252 / 0.08);
+  --glass-blur: 16px;
+  --glass-blur-lg: 24px;
 }
 
 .dark {
@@ -130,6 +141,17 @@
   --surface-foreground: oklch(0.95 0.01 255);
   --glow-primary: oklch(0.37 0.07 252 / 0.36);
   --glow-secondary: oklch(0.39 0.05 152 / 0.28);
+  --glow-accent: oklch(0.45 0.06 90 / 0.18);
+  --glass-bg: oklch(0.18 0.005 250 / 0.6);
+  --glass-bg-subtle: oklch(0.18 0.005 250 / 0.4);
+  --glass-bg-strong: oklch(0.18 0.005 250 / 0.75);
+  --glass-border: oklch(1 0 0 / 0.08);
+  --glass-border-subtle: oklch(1 0 0 / 0.05);
+  --glass-shadow: 0 8px 32px oklch(0 0 0 / 0.25);
+  --glass-shadow-lg: 0 24px 64px oklch(0 0 0 / 0.35);
+  --glass-shadow-glow: 0 0 40px oklch(0.72 0.09 252 / 0.12);
+  --glass-blur: 16px;
+  --glass-blur-lg: 24px;
 }
 
 @layer base {
@@ -140,8 +162,46 @@
     @apply bg-background text-foreground antialiased;
     background-image:
       radial-gradient(900px circle at 0% -10%, var(--glow-primary), transparent 55%),
-      radial-gradient(800px circle at 100% -20%, var(--glow-secondary), transparent 50%);
+      radial-gradient(800px circle at 100% -20%, var(--glow-secondary), transparent 50%),
+      radial-gradient(600px circle at 50% 100%, var(--glow-accent), transparent 45%);
     background-repeat: no-repeat;
     background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  .glass-subtle {
+    background: var(--glass-bg-subtle);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border-subtle);
+  }
+  .glass-strong {
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(var(--glass-blur-lg));
+    -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  @keyframes glass-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .glass-skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--glass-bg-subtle) 25%,
+      var(--glass-bg) 50%,
+      var(--glass-bg-subtle) 75%
+    );
+    background-size: 200% 100%;
+    animation: glass-shimmer 2s ease-in-out infinite;
   }
 }

@@ -141,23 +141,29 @@ export function TransactionForm({ open, onClose, onSuccess, editData }: Transact
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>İşlem Türü</Label>
-              <div className="flex gap-2">
-                <Button
+              <div className="flex gap-1 rounded-xl border border-white/[0.1] bg-white/[0.04] p-1 backdrop-blur-sm">
+                <button
                   type="button"
-                  variant={type === "EXPENSE" ? "default" : "outline"}
-                  className="flex-1"
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                    type === "EXPENSE"
+                      ? "bg-expense/15 text-expense shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                   onClick={() => setType("EXPENSE")}
                 >
                   Harcama
-                </Button>
-                <Button
+                </button>
+                <button
                   type="button"
-                  variant={type === "INCOME" ? "default" : "outline"}
-                  className="flex-1"
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                    type === "INCOME"
+                      ? "bg-income/15 text-income shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                   onClick={() => setType("INCOME")}
                 >
                   Gelir
-                </Button>
+                </button>
               </div>
             </div>
 

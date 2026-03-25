@@ -67,7 +67,7 @@ export function AdminFinanceReminderJobPanel({
     )
 
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/90">
+    <Card>
       <CardHeader>
         <div className="flex items-center gap-3">
           {job.lastStatus === "failed" ? (
@@ -90,28 +90,28 @@ export function AdminFinanceReminderJobPanel({
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+          <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Son calisma</p>
             <p className="mt-2 text-sm font-medium">
               {job.lastRunAt ? formatDateTime(job.lastRunAt) : "Kayit yok"}
             </p>
           </div>
-          <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+          <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Islenen reminder</p>
             <p className="mt-2 text-sm font-medium">{job.lastProcessedCount ?? 0}</p>
           </div>
-          <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+          <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Pending</p>
             <p className="mt-2 text-sm font-medium">{job.pendingReminderCount}</p>
           </div>
-          <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+          <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Failed</p>
             <p className="mt-2 text-sm font-medium">{job.failedReminderCount}</p>
           </div>
         </div>
 
         {job.lastError ? (
-          <div className="rounded-[22px] border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground">
+          <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4 text-sm text-muted-foreground">
             Son hata: {job.lastError}
           </div>
         ) : null}

@@ -17,7 +17,7 @@ interface AdminTopbarProps {
 
 export function AdminTopbar({ name, email, role, onMenuClick }: AdminTopbarProps) {
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center gap-3 border-b border-border/70 bg-background/80 px-4 backdrop-blur-xl sm:px-6">
+    <header className="sticky top-0 z-30 flex h-20 items-center gap-3 border-b border-white/[0.08] bg-[var(--glass-bg-subtle)] px-4 backdrop-blur-xl dark:border-white/[0.05] sm:px-6">
       <Button
         variant="ghost"
         size="icon"
@@ -39,7 +39,7 @@ export function AdminTopbar({ name, email, role, onMenuClick }: AdminTopbarProps
 
       <ThemeToggle className="rounded-xl" />
 
-      <div className="hidden rounded-2xl border border-border/70 bg-card/80 px-4 py-2 text-right sm:block">
+      <div className="hidden rounded-2xl border border-white/[0.1] bg-white/[0.05] px-4 py-2 text-right backdrop-blur-sm sm:block">
         <p className="text-sm font-semibold">{name}</p>
         <p className="text-xs text-muted-foreground">{formatAdminRole(role)}</p>
       </div>

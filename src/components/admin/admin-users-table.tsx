@@ -114,7 +114,7 @@ export function AdminUsersTable({ users, canBulkUpdate }: AdminUsersTableProps) 
 
   if (users.length === 0) {
     return (
-      <div className="rounded-[26px] border border-dashed border-border/70 bg-card/70 px-6 py-12 text-center">
+      <div className="rounded-[26px] border border-dashed border-white/[0.08] bg-card/70 px-6 py-12 text-center">
         <p className="text-lg font-semibold">Kullanici bulunamadi</p>
         <p className="mt-2 text-sm text-muted-foreground">E-posta, rol veya durum filtrelerini genisletmeyi deneyin.</p>
       </div>
@@ -123,9 +123,9 @@ export function AdminUsersTable({ users, canBulkUpdate }: AdminUsersTableProps) 
 
   return (
     <>
-      <div className="space-y-4 rounded-[26px] border border-border/70 bg-card/85 p-4 shadow-sm">
+      <div className="space-y-4 rounded-[26px] border border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06] p-4 shadow-sm">
         {canBulkUpdate ? (
-          <div className="flex flex-col gap-3 rounded-[22px] border border-border/60 bg-background/70 p-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 rounded-[22px] border border-white/[0.06] bg-white/[0.04] backdrop-blur-sm p-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-sm font-semibold">Toplu islemler</p>
               <p className="text-sm text-muted-foreground">Bu sayfada {selectedIds.length} kullanici secili</p>
@@ -141,7 +141,7 @@ export function AdminUsersTable({ users, canBulkUpdate }: AdminUsersTableProps) 
             </div>
           </div>
         ) : (
-          <div className="rounded-[22px] border border-border/60 bg-background/70 p-4 text-sm text-muted-foreground">
+          <div className="rounded-[22px] border border-white/[0.06] bg-white/[0.04] backdrop-blur-sm p-4 text-sm text-muted-foreground">
             Bu rolde toplu kullanici mutasyonu kapali. Listeleme, detay ve audit kisayollari acik kalir.
           </div>
         )}
@@ -235,7 +235,7 @@ export function AdminUsersTable({ users, canBulkUpdate }: AdminUsersTableProps) 
               </SheetHeader>
 
               <div className="grid gap-4">
-                <div className="rounded-[24px] border border-border/70 bg-card/80 p-5">
+                <div className="rounded-[24px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-5">
                   <div className="flex items-center gap-3">
                     <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                       {previewUser.role === "USER" ? <UserCog className="h-5 w-5" /> : <Shield className="h-5 w-5" />}
@@ -248,19 +248,19 @@ export function AdminUsersTable({ users, canBulkUpdate }: AdminUsersTableProps) 
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+                  <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Rol</p>
                     <p className="mt-2 text-lg font-semibold">{formatAdminRole(previewUser.role)}</p>
                   </div>
-                  <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+                  <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Durum</p>
                     <p className="mt-2 text-lg font-semibold">{previewUser.isActive ? "Aktif" : "Pasif"}</p>
                   </div>
-                  <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+                  <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Olusturma</p>
                     <p className="mt-2 text-sm font-medium">{formatDateTime(previewUser.createdAt)}</p>
                   </div>
-                  <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+                  <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Son giris</p>
                     <p className="mt-2 text-sm font-medium">
                       {previewUser.lastLoginAt ? formatDateTime(previewUser.lastLoginAt) : "Henuz giris yok"}
@@ -268,7 +268,7 @@ export function AdminUsersTable({ users, canBulkUpdate }: AdminUsersTableProps) 
                   </div>
                 </div>
 
-                <div className="rounded-[24px] border border-border/70 bg-card/80 p-5">
+                <div className="rounded-[24px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Aktivite yogunlugu</p>
                   <p className="mt-2 text-2xl font-semibold">{previewUser.transactionCount}</p>
                   <p className="text-sm text-muted-foreground">Bu hesaba bagli mevcut islem sayisi.</p>

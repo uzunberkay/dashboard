@@ -24,18 +24,18 @@ function getEventTone(event: AdminActivityItem["event"]) {
 
 export function AdminActivityFeed({ items }: AdminActivityFeedProps) {
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/90">
+    <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-lg">Son aktiviteler</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border/70 px-4 py-8 text-center text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-white/[0.08] px-4 py-8 text-center text-sm text-muted-foreground">
             Henuz aktivite kaydi yok.
           </div>
         ) : (
           items.map((item) => (
-            <div key={item.id} className="flex gap-4 rounded-2xl border border-border/60 bg-background/60 p-4">
+            <div key={item.id} className="flex gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm p-4">
               <div className="mt-1 h-2.5 w-2.5 rounded-full bg-primary" />
               <div className="min-w-0 flex-1 space-y-2">
                 <div className="flex flex-wrap items-center gap-2">

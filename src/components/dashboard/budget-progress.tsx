@@ -53,7 +53,7 @@ export const BudgetProgress = memo(function BudgetProgress({
         : "bg-income"
 
   return (
-    <div className={cn("space-y-3 rounded-[20px] border border-border/60 bg-background/55 p-4 shadow-sm", className)}>
+    <div className={cn("space-y-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-sm", className)}>
       <div className="flex items-center justify-between gap-2">
         <p className="truncate text-sm font-medium">{label}</p>
         <StatusBadge

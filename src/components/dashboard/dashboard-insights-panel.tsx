@@ -24,7 +24,7 @@ interface InsightRowProps {
 
 function InsightRow({ title, value, helper, icon: Icon }: InsightRowProps) {
   return (
-    <div className="rounded-[22px] border border-border/70 bg-background/55 p-4 shadow-sm">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-sm">
       <div className="flex items-start gap-3">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
           <Icon className="h-5 w-5" />
@@ -45,7 +45,7 @@ export function DashboardInsightsPanel({
   peakExpenseDay,
 }: DashboardInsightsPanelProps) {
   return (
-    <Card className="h-full rounded-[24px] border-border/70 bg-card/95">
+    <Card className="h-full rounded-[24px]">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-primary" />

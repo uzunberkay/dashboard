@@ -139,7 +139,7 @@ export function LoginForm({
         <Button
           type="submit"
           disabled={loading}
-          className="h-14 w-full rounded-2xl bg-slate-950 px-5 text-sm font-semibold text-white shadow-[0_28px_55px_-28px_rgba(15,23,42,0.7)] transition hover:bg-slate-900"
+          className="h-14 w-full rounded-2xl bg-slate-950 px-5 text-sm font-semibold text-white shadow-[0_28px_55px_-28px_rgba(15,23,42,0.7)] transition-all hover:bg-slate-900 hover:shadow-[0_32px_64px_-24px_rgba(15,23,42,0.8)] hover:-translate-y-0.5"
         >
           {loading ? (
             "Giris yapiliyor..."

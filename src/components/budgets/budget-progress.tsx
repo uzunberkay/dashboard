@@ -54,7 +54,7 @@ function getStatusBadge(status: string) {
 export function BudgetProgress({ budgets }: BudgetProgressProps) {
   if (budgets.length === 0) {
     return (
-      <div className="rounded-[22px] border border-dashed border-border/80 bg-muted/20 px-6 py-10 text-center">
+      <div className="rounded-2xl border border-dashed border-white/[0.1] bg-white/[0.02] px-6 py-10 text-center">
         <p className="text-sm font-medium">Butce limiti belirlenmis kategori bulunamadi.</p>
         <p className="mt-1 text-xs text-muted-foreground">
           Kategoriler sayfasindan limit tanimlayarak bu alani aktif hale getirebilirsiniz.
@@ -66,7 +66,7 @@ export function BudgetProgress({ budgets }: BudgetProgressProps) {
   return (
     <div className="space-y-4">
       {budgets.map((budget) => (
-        <Card key={budget.categoryId} className="rounded-[24px] border-border/70 bg-card/95">
+        <Card key={budget.categoryId} className="rounded-[24px] ">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">

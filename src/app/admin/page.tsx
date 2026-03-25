@@ -71,7 +71,7 @@ export default async function AdminDashboardPage({
         )}
       />
 
-      <div className="rounded-[26px] border border-border/70 bg-card/85 p-5 shadow-sm">
+      <div className="rounded-[26px] border border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06] p-5 shadow-sm">
         <form className="grid gap-4 lg:grid-cols-[220px_220px_auto]">
           <div className="space-y-2">
             <label htmlFor="range" className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">

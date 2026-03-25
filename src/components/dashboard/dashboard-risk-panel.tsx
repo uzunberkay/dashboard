@@ -34,7 +34,7 @@ export function DashboardRiskPanel({
   const hasSignals = alertItems.length > 0 || monthlyGoalProgress !== null
 
   return (
-    <Card className="h-full rounded-[24px] border-border/70 bg-card/95">
+    <Card className="h-full rounded-[24px]">
       <CardHeader className="space-y-1 p-5">
         <div className="flex items-center gap-2">
           <AlertTriangle className="h-4 w-4 text-warning" />
@@ -46,7 +46,7 @@ export function DashboardRiskPanel({
       </CardHeader>
       <CardContent className="space-y-4 p-5 pt-0">
         {!hasSignals ? (
-          <div className="rounded-[22px] border border-dashed border-border/80 bg-background/45 p-5 text-center">
+          <div className="rounded-2xl border border-dashed border-white/[0.1] bg-white/[0.02] p-5 text-center">
             <ShieldCheck className="mx-auto h-10 w-10 text-income" />
             <p className="mt-3 text-sm font-semibold">Su anda kritik bir sinyal yok</p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
@@ -80,7 +80,7 @@ export function DashboardRiskPanel({
             {alertItems.map((item) => (
               <div
                 key={item.categoryId}
-                className="rounded-[20px] border border-border/70 bg-background/55 p-4 shadow-sm"
+                className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-sm"
               >
                 <div className="flex items-center justify-between gap-2">
                   <p className="truncate text-sm font-medium">{item.categoryName}</p>
@@ -103,7 +103,7 @@ export function DashboardRiskPanel({
         ) : null}
 
         {monthlyGoalProgress ? (
-          <div className="rounded-[22px] border border-border/70 bg-background/55 p-4 shadow-sm">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-sm">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <PiggyBank className="h-4 w-4 text-primary" />
@@ -152,7 +152,7 @@ export function DashboardRiskPanel({
             </p>
           </div>
         ) : hasSignals ? (
-          <div className="rounded-[22px] border border-dashed border-border/80 bg-background/40 p-4 text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-white/[0.1] bg-white/[0.02] p-4 text-sm text-muted-foreground">
             Bu ay icin tanimli toplam hedef yok. Hedef eklerseniz ilerleme takibi burada gorunur.
           </div>
         ) : null}

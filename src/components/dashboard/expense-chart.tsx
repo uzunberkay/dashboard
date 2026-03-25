@@ -52,27 +52,27 @@ export const ExpenseChart = memo(function ExpenseChart({
   }, [peakExpenseDay])
 
   return (
-    <Card className="h-full rounded-[24px] border-border/70 bg-card/95">
-      <CardHeader className="space-y-1 p-5">
+    <Card className="h-full rounded-[24px]">
+      <CardHeader className="space-y-3 p-5">
         <CardTitle className="text-base font-semibold">Aylik harcama trendi</CardTitle>
         <div className="grid gap-2 sm:grid-cols-3">
-          <div className="rounded-2xl border border-border/70 bg-background/55 px-3 py-2">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] px-3 py-2 backdrop-blur-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Toplam
             </p>
-            <p className="mt-1 text-sm font-semibold">{formatCurrency(totalExpense)}</p>
+            <p className="mt-1 text-sm font-bold text-expense">{formatCurrency(totalExpense)}</p>
           </div>
-          <div className="rounded-2xl border border-border/70 bg-background/55 px-3 py-2">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] px-3 py-2 backdrop-blur-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Gunluk ortalama
             </p>
-            <p className="mt-1 text-sm font-semibold">{formatCurrency(dailyAverage)}</p>
+            <p className="mt-1 text-sm font-bold">{formatCurrency(dailyAverage)}</p>
           </div>
-          <div className="rounded-2xl border border-border/70 bg-background/55 px-3 py-2">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] px-3 py-2 backdrop-blur-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Zirve gun
             </p>
-            <p className="mt-1 text-sm font-semibold">
+            <p className="mt-1 text-sm font-bold">
               {peakExpenseDay ? formatDate(peakExpenseDay.date) : "Veri yok"}
             </p>
           </div>
@@ -80,7 +80,7 @@ export const ExpenseChart = memo(function ExpenseChart({
       </CardHeader>
       <CardContent className="p-5 pt-0">
         {formattedData.length === 0 ? (
-          <div className="flex h-[300px] items-center justify-center rounded-xl border border-dashed border-border/70 bg-muted/20 text-sm text-muted-foreground">
+          <div className="flex h-[300px] items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.02] text-sm text-muted-foreground">
             Grafik icin yeterli harcama verisi bulunmuyor.
           </div>
         ) : (
@@ -110,10 +110,11 @@ export const ExpenseChart = memo(function ExpenseChart({
                 labelFormatter={(label) => `${label}. gun`}
                 formatter={(value) => [formatCurrency(Number(value)), "Harcama"]}
                 contentStyle={{
-                  borderRadius: "12px",
-                  border: "1px solid var(--border)",
-                  backgroundColor: "var(--card)",
-                  boxShadow: "0 6px 24px rgba(0, 0, 0, 0.08)",
+                  borderRadius: "16px",
+                  border: "1px solid var(--glass-border)",
+                  backgroundColor: "var(--glass-bg-strong)",
+                  backdropFilter: "blur(24px)",
+                  boxShadow: "var(--glass-shadow-lg)",
                 }}
               />
               {peakExpenseDay && peakDayLabel ? (

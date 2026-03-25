@@ -25,7 +25,7 @@ export function AdminTrendChart({ data }: AdminTrendChartProps) {
   })
 
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/90">
+    <Card>
       <CardHeader className="pb-1">
         <CardTitle className="text-lg">Son 14 gun platform trendi</CardTitle>
       </CardHeader>
@@ -47,9 +47,11 @@ export function AdminTrendChart({ data }: AdminTrendChartProps) {
                 labelFormatter={(value) => dateFormatter.format(new Date(String(value)))}
                 contentStyle={{
                   borderRadius: 16,
-                  border: "1px solid rgba(148, 163, 184, 0.2)",
-                  background: "rgba(15, 23, 42, 0.92)",
-                  color: "#f8fafc",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  backgroundColor: "var(--glass-bg-strong)",
+                  backdropFilter: "blur(24px)",
+                  boxShadow: "var(--glass-shadow-lg)",
+                  color: "var(--foreground)",
                 }}
               />
               <Area

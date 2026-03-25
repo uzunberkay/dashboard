@@ -57,13 +57,13 @@ export function AdminUserNotesPanel({ userId, notes, canCreate }: AdminUserNotes
   }
 
   return (
-    <Card className="rounded-[24px] border-border/70 bg-card/90">
+    <Card>
       <CardHeader>
         <CardTitle>Internal notlar</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {canCreate ? (
-          <div className="space-y-3 rounded-[22px] border border-border/70 bg-background/70 p-4">
+          <div className="space-y-3 rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <Textarea
               value={body}
               onChange={(event) => setBody(event.target.value)}
@@ -79,12 +79,12 @@ export function AdminUserNotesPanel({ userId, notes, canCreate }: AdminUserNotes
         ) : null}
 
         {notes.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border/70 px-4 py-8 text-center text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-white/[0.08] px-4 py-8 text-center text-sm text-muted-foreground">
             Henuz internal not bulunmuyor.
           </div>
         ) : (
           notes.map((note) => (
-            <div key={note.id} className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+            <div key={note.id} className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold">{note.authorName}</p>

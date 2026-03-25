@@ -1,0 +1,14 @@
+
+> tuna@1.0.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.4:3000
+- Environments: .env
+
+✓ Starting...
+Creating turbopack project { dir: 'D:\\tuna', testMode: true }
+✓ Ready in 1002ms
+ GET / 200 in 1702ms (compile: 988ms, proxy.ts: 111ms, render: 603ms)
+ GET /api/auth/session 200 in 681ms (compile: 652ms, proxy.ts: 3ms, render: 25ms)

@@ -57,7 +57,7 @@ export function AdminSidebar({ role, open, onClose }: AdminSidebarProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-80 flex-col border-r border-slate-200/70 bg-[linear-gradient(180deg,rgba(248,250,252,0.96)_0%,rgba(241,245,249,0.9)_100%)] text-slate-900 shadow-2xl transition-transform duration-200 ease-out dark:border-slate-800 dark:bg-[linear-gradient(180deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.92)_100%)] dark:text-slate-100 lg:static lg:translate-x-0 lg:shadow-none",
+          "fixed inset-y-0 left-0 z-50 flex w-80 flex-col border-r border-white/[0.1] bg-[var(--glass-bg-strong)] text-foreground shadow-[var(--glass-shadow-lg)] backdrop-blur-[var(--glass-blur-lg)] transition-transform duration-300 ease-out dark:border-white/[0.06] lg:static lg:translate-x-0 lg:shadow-none",
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -83,7 +83,7 @@ export function AdminSidebar({ role, open, onClose }: AdminSidebarProps) {
         </div>
 
         <div className="px-5 pt-5">
-          <div className="rounded-[26px] border border-slate-200/70 bg-white/80 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+          <div className="rounded-2xl border border-white/[0.1] bg-white/[0.06] p-4 backdrop-blur-sm dark:border-white/[0.06]">
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                 <WalletCards className="h-4 w-4" />

@@ -422,7 +422,7 @@ export function DashboardPageClient({
 
   if (!loading && !data && error) {
     return (
-      <Card className="rounded-[24px] border-border/70 bg-card/95">
+      <Card className="rounded-[24px]">
         <CardContent className="flex flex-col items-center justify-center gap-4 py-16 text-center">
           <AlertCircle className="h-10 w-10 text-expense" />
           <div className="space-y-1">
@@ -491,7 +491,7 @@ export function DashboardPageClient({
         actions={(
           <>
             <Select value={month} onValueChange={setMonth}>
-              <SelectTrigger className="w-full rounded-xl border-border/70 bg-background/70 sm:w-[220px]">
+              <SelectTrigger className="w-full rounded-xl border-white/[0.08] bg-white/[0.04] backdrop-blur-sm sm:w-[220px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -527,7 +527,7 @@ export function DashboardPageClient({
       />
 
       {error ? (
-        <Card className="rounded-[22px] border-warning/40 bg-warning/10">
+        <Card className="rounded-2xl border-warning/30 bg-warning/8 backdrop-blur-sm">
           <CardContent className="flex flex-col gap-3 p-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-2 text-sm">
               <StatusBadge tone="warning" label="Baglanti uyarisi" />
@@ -564,7 +564,7 @@ export function DashboardPageClient({
       </div>
 
       {isCompletelyEmpty ? (
-        <Card className="rounded-[24px] border-dashed border-border/80 bg-card/90">
+        <Card className="rounded-[24px] border-dashed border-white/[0.1] bg-card/50">
           <CardContent className="flex flex-col items-center justify-center gap-4 py-14 text-center">
             <CircleDollarSign className="h-12 w-12 text-neutral" />
             <div className="space-y-1">
@@ -623,7 +623,7 @@ export function DashboardPageClient({
               periodLabel={data.period.label}
             />
 
-            <Card className="rounded-[24px] border-border/70 bg-card/95">
+            <Card className="rounded-[24px]">
               <CardHeader className="space-y-1 p-5">
                 <CardTitle className="text-base font-semibold">Butce baskisi olan kategoriler</CardTitle>
                 <p className="text-xs text-muted-foreground">
@@ -632,7 +632,7 @@ export function DashboardPageClient({
               </CardHeader>
               <CardContent className="space-y-3 p-5 pt-0">
                 {topCategories.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-border/70 bg-muted/20 p-5 text-center text-sm text-muted-foreground">
+                  <div className="rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.02] p-5 text-center text-sm text-muted-foreground">
                     Kategori analizi icin yeterli harcama verisi yok.
                   </div>
                 ) : (

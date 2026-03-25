@@ -266,7 +266,7 @@ export default function TransactionsPage() {
         stats={heroStats}
       />
 
-      <Card className="rounded-[24px] border-border/70 bg-card/95">
+      <Card className="rounded-[24px]">
         <CardHeader className="space-y-1 p-5">
           <CardTitle className="text-base font-semibold">Filtreler</CardTitle>
           <p className="text-xs text-muted-foreground">
@@ -275,7 +275,7 @@ export default function TransactionsPage() {
         </CardHeader>
         <CardContent className="space-y-4 p-5 pt-0">
           {focusMeta ? (
-            <div className="rounded-[20px] border border-primary/20 bg-primary/5 px-4 py-3">
+            <div className="rounded-2xl border border-primary/15 bg-primary/5 px-4 py-3 backdrop-blur-sm">
               <div className="flex items-center gap-2">
                 <Compass className="h-4 w-4 text-primary" />
                 <p className="text-sm font-medium">{focusMeta.title}</p>
@@ -293,7 +293,7 @@ export default function TransactionsPage() {
                 setPage(1)
               }}
             >
-              <SelectTrigger className="rounded-xl border-border/70 bg-background/70">
+              <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -312,7 +312,7 @@ export default function TransactionsPage() {
                 setPage(1)
               }}
             >
-              <SelectTrigger className="rounded-xl border-border/70 bg-background/70">
+              <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -329,7 +329,7 @@ export default function TransactionsPage() {
                 setPage(1)
               }}
             >
-              <SelectTrigger className="rounded-xl border-border/70 bg-background/70">
+              <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -349,7 +349,7 @@ export default function TransactionsPage() {
             </div>
           </div>
 
-          <div className="rounded-[20px] border border-border/70 bg-background/55 px-4 py-3 text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-muted-foreground backdrop-blur-sm">
             {hasActiveFilters
               ? `${selectedCategoryName} ve ${typeFilter === "all" ? "tum tipler" : typeFilter === "INCOME" ? "sadece gelir" : "sadece gider"} filtresi aktif. Bu kayitlar secili dashboard baglamini aciklamak icin daraltildi.`
               : "Tum tipler ve tum kategoriler goruntuleniyor."}
@@ -358,18 +358,18 @@ export default function TransactionsPage() {
       </Card>
 
       {loading ? (
-        <Card className="rounded-[24px] border-border/70 bg-card/95">
+        <Card className="rounded-[24px]">
           <CardContent className="space-y-3 p-5">
             {Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={index}
-                className="h-20 animate-pulse rounded-[22px] border border-border/70 bg-muted/30"
+                className="h-20 rounded-2xl glass-skeleton"
               />
             ))}
           </CardContent>
         </Card>
       ) : transactions.length === 0 ? (
-        <Card className="rounded-[24px] border-border/70 bg-card/95">
+        <Card className="rounded-[24px]">
           <CardContent className="flex flex-col items-center justify-center py-14 text-center">
             <ArrowLeftRight className="mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-medium">Bu gorunumde kayit bulunmuyor</h3>
@@ -392,7 +392,7 @@ export default function TransactionsPage() {
           </CardContent>
         </Card>
       ) : (
-        <Card className="rounded-[24px] border-border/70 bg-card/95">
+        <Card className="rounded-[24px]">
           <CardHeader className="space-y-1 p-5">
             <CardTitle className="text-base font-semibold">Islem listesi</CardTitle>
             <p className="text-xs text-muted-foreground">
@@ -403,7 +403,7 @@ export default function TransactionsPage() {
             <TransactionList transactions={transactions} onEdit={handleEdit} onDelete={handleDelete} />
           </CardContent>
           {pagination.total > 0 ? (
-            <CardFooter className="flex flex-col gap-3 border-t border-border/70 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <CardFooter className="flex flex-col gap-3 border-t border-white/[0.08] p-5 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-muted-foreground">
                 Toplam {pagination.total} islem / Sayfa {pagination.page} / {pagination.totalPages}
               </p>

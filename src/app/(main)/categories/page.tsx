@@ -223,7 +223,7 @@ export default function CategoriesPage() {
       />
 
       <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-        <Card className="rounded-[24px] border-border/70 bg-card/95">
+        <Card className="rounded-[24px] ">
           <CardHeader className="space-y-1 p-5">
             <div className="flex items-center gap-2">
               <Link2 className="h-4 w-4 text-primary" />
@@ -234,19 +234,19 @@ export default function CategoriesPage() {
             </p>
           </CardHeader>
           <CardContent className="grid gap-3 p-5 pt-0 sm:grid-cols-3">
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Kategoriye bagli recurring kural</p>
               <p className="mt-1 text-lg font-semibold">
                 {dashboardSnapshot?.recurringRules.filter((rule) => rule.categoryId).length ?? 0}
               </p>
             </div>
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Kategoriye bagli scheduled payment</p>
               <p className="mt-1 text-lg font-semibold">
                 {dashboardSnapshot?.scheduledPayments.filter((payment) => payment.categoryId).length ?? 0}
               </p>
             </div>
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">En baskin kategori</p>
               <p className="mt-1 text-lg font-semibold">
                 {dashboardSnapshot?.insights.topCategory?.name ?? "Veri yok"}
@@ -260,7 +260,7 @@ export default function CategoriesPage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-border/70 bg-card/95">
+        <Card className="rounded-[24px] ">
           <CardHeader className="space-y-1 p-5">
             <div className="flex items-center gap-2">
               <Layers3 className="h-4 w-4 text-primary" />
@@ -272,14 +272,14 @@ export default function CategoriesPage() {
           </CardHeader>
           <CardContent className="space-y-3 p-5 pt-0">
             {linkedCategoryNames.length === 0 ? (
-              <div className="rounded-[18px] border border-dashed border-border/80 bg-background/40 p-5 text-center text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-dashed border-white/[0.1] bg-white/[0.02] p-5 text-center text-sm text-muted-foreground">
                 Henuz kategoriye bagli planlama kaydi yok.
               </div>
             ) : (
               linkedCategoryNames.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between gap-3 rounded-[18px] border border-border/70 bg-background/55 px-4 py-3"
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3"
                 >
                   <div>
                     <p className="text-sm font-medium">{item.name}</p>
@@ -302,7 +302,7 @@ export default function CategoriesPage() {
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i} className="animate-pulse rounded-[24px] border-border/70 bg-card/95">
+            <Card key={i} className="animate-pulse rounded-[24px] ">
               <CardContent className="p-6">
                 <div className="h-10 w-full rounded bg-muted" />
               </CardContent>
@@ -310,7 +310,7 @@ export default function CategoriesPage() {
           ))}
         </div>
       ) : categories.length === 0 ? (
-        <Card className="rounded-[24px] border-border/70 bg-card/95">
+        <Card className="rounded-[24px] ">
           <CardContent className="flex flex-col items-center justify-center py-12 text-center">
             <Tags className="mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-medium">Henuz kategori yok</h3>
@@ -324,7 +324,7 @@ export default function CategoriesPage() {
           fallback={
             <div className="space-y-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <Card key={i} className="animate-pulse rounded-[24px] border-border/70 bg-card/95">
+                <Card key={i} className="animate-pulse rounded-[24px] ">
                   <CardContent className="p-6">
                     <div className="h-10 w-full rounded bg-muted" />
                   </CardContent>

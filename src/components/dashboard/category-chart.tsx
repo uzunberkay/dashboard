@@ -31,7 +31,7 @@ export const CategoryChart = memo(function CategoryChart({ data, month }: Catego
 
   return (
     <>
-      <Card className="h-full rounded-[24px] border-border/70 bg-card/95">
+      <Card className="h-full rounded-[24px]">
         <CardHeader className="space-y-1 p-5">
           <CardTitle className="text-base font-semibold">Kategori dagilimi</CardTitle>
           <p className="text-xs text-muted-foreground">
@@ -40,7 +40,7 @@ export const CategoryChart = memo(function CategoryChart({ data, month }: Catego
         </CardHeader>
         <CardContent className="p-5 pt-0">
           {sortedData.length === 0 ? (
-            <div className="flex h-[300px] items-center justify-center rounded-xl border border-dashed border-border/70 bg-muted/20 text-sm text-muted-foreground">
+            <div className="flex h-[300px] items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.02] text-sm text-muted-foreground">
               Kategori grafigi icin veri bulunmuyor.
             </div>
           ) : (
@@ -71,10 +71,11 @@ export const CategoryChart = memo(function CategoryChart({ data, month }: Catego
                   <Tooltip
                     formatter={(value, name) => [formatCurrency(Number(value)), name]}
                     contentStyle={{
-                      borderRadius: "12px",
-                      border: "1px solid var(--border)",
-                      backgroundColor: "var(--card)",
-                      boxShadow: "0 6px 24px rgba(0, 0, 0, 0.08)",
+                      borderRadius: "16px",
+                      border: "1px solid var(--glass-border)",
+                      backgroundColor: "var(--glass-bg-strong)",
+                      backdropFilter: "blur(24px)",
+                      boxShadow: "var(--glass-shadow-lg)",
                     }}
                   />
                 </PieChart>
@@ -86,7 +87,7 @@ export const CategoryChart = memo(function CategoryChart({ data, month }: Catego
                   return (
                     <button
                       key={entry.id}
-                      className="w-full rounded-xl border border-border/60 bg-background/60 px-3 py-3 text-left transition-colors hover:bg-muted/40"
+                      className="w-full rounded-xl border border-white/[0.08] bg-white/[0.04] px-3 py-3 text-left backdrop-blur-sm transition-all hover:bg-white/[0.08]"
                       onClick={() => setSelectedCategory(entry)}
                       type="button"
                     >

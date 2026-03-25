@@ -25,7 +25,7 @@ export default async function AdminSettingsPage() {
       <AdminSettingsForm definitions={data.definitions} values={data.values} />
 
       <div className="grid gap-6 xl:grid-cols-3">
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader>
             <div className="flex items-center gap-3">
               <ShieldCheck className="h-5 w-5 text-primary" />
@@ -48,7 +48,7 @@ export default async function AdminSettingsPage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader>
             <div className="flex items-center gap-3">
               <Cpu className="h-5 w-5 text-emerald-500" />
@@ -71,7 +71,7 @@ export default async function AdminSettingsPage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
+        <Card className="rounded-[24px] border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06]">
           <CardHeader>
             <div className="flex items-center gap-3">
               <Users className="h-5 w-5 text-amber-500" />

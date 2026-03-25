@@ -309,7 +309,7 @@ export function PlanningSections({
       <Card
         id="recurring-rules"
         className={cn(
-          "rounded-[24px] border-border/70 bg-card/95",
+          "rounded-[24px] ",
           focus === "recurring-rules" && "ring-2 ring-primary/30"
         )}
       >
@@ -333,30 +333,30 @@ export function PlanningSections({
         </CardHeader>
         <CardContent className="space-y-4 p-5 pt-0">
           <div className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Toplam kural</p>
               <p className="mt-1 text-lg font-semibold">{recurringRules.length}</p>
             </div>
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Aktif kural</p>
               <p className="mt-1 text-lg font-semibold">
                 {recurringRules.filter((rule) => rule.isActive).length}
               </p>
             </div>
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Abonelik</p>
               <p className="mt-1 text-lg font-semibold">{subscriptionCount}</p>
             </div>
           </div>
           {recurringRules.length === 0 ? (
-            <div className="rounded-[18px] border border-dashed border-border/80 bg-background/40 p-5 text-center text-sm text-muted-foreground">
+            <div className="rounded-2xl border border-dashed border-white/[0.1] bg-white/[0.02] p-5 text-center text-sm text-muted-foreground">
               Henuz recurring kural eklenmedi.
             </div>
           ) : (
             recurringRules.map((rule) => (
               <div
                 key={rule.id}
-                className="flex flex-col gap-3 rounded-[18px] border border-border/70 bg-background/55 p-4 lg:flex-row lg:items-center lg:justify-between"
+                className="flex flex-col gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4 lg:flex-row lg:items-center lg:justify-between"
               >
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -402,7 +402,7 @@ export function PlanningSections({
       <Card
         id="scheduled-payments"
         className={cn(
-          "rounded-[24px] border-border/70 bg-card/95",
+          "rounded-[24px] ",
           focus === "scheduled-payments" && "ring-2 ring-primary/30"
         )}
       >
@@ -420,17 +420,17 @@ export function PlanningSections({
         </CardHeader>
         <CardContent className="space-y-4 p-5 pt-0">
           <div className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Bekleyen</p>
               <p className="mt-1 text-lg font-semibold">{upcomingPayments.length}</p>
             </div>
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Odendi</p>
               <p className="mt-1 text-lg font-semibold">
                 {scheduledPayments.filter((payment) => payment.status === "PAID").length}
               </p>
             </div>
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Atlandi</p>
               <p className="mt-1 text-lg font-semibold">
                 {scheduledPayments.filter((payment) => payment.status === "SKIPPED").length}
@@ -439,14 +439,14 @@ export function PlanningSections({
           </div>
 
           {scheduledPayments.length === 0 ? (
-            <div className="rounded-[18px] border border-dashed border-border/80 bg-background/40 p-5 text-center text-sm text-muted-foreground">
+            <div className="rounded-2xl border border-dashed border-white/[0.1] bg-white/[0.02] p-5 text-center text-sm text-muted-foreground">
               Henuz planli odeme yok.
             </div>
           ) : (
             scheduledPayments.slice(0, 8).map((payment) => (
               <div
                 key={payment.id}
-                className="flex flex-col gap-3 rounded-[18px] border border-border/70 bg-background/55 p-4 lg:flex-row lg:items-center lg:justify-between"
+                className="flex flex-col gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4 lg:flex-row lg:items-center lg:justify-between"
               >
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -498,7 +498,7 @@ export function PlanningSections({
         <Card
           id="notifications"
           className={cn(
-            "rounded-[24px] border-border/70 bg-card/95",
+            "rounded-[24px] ",
             focus === "notifications" && "ring-2 ring-primary/30"
           )}
         >
@@ -512,7 +512,7 @@ export function PlanningSections({
             </p>
           </CardHeader>
           <CardContent className="space-y-4 p-5 pt-0">
-            <label className="flex items-center justify-between gap-3 rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <label className="flex items-center justify-between gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <span className="text-sm font-medium">Email reminder acik</span>
               <input
                 type="checkbox"
@@ -525,7 +525,7 @@ export function PlanningSections({
                 }
               />
             </label>
-            <label className="flex items-center justify-between gap-3 rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <label className="flex items-center justify-between gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <span className="text-sm font-medium">Aylik digest email acik</span>
               <input
                 type="checkbox"
@@ -538,7 +538,7 @@ export function PlanningSections({
                 }
               />
             </label>
-            <label className="space-y-2 rounded-[18px] border border-border/70 bg-background/55 p-4">
+            <label className="space-y-2 rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
               <span className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
                 Hatirlatma kac gun once gelsin
               </span>
@@ -562,7 +562,7 @@ export function PlanningSections({
           </CardContent>
         </Card>
 
-        <Card className="rounded-[24px] border-border/70 bg-card/95">
+        <Card className="rounded-[24px] ">
           <CardHeader className="space-y-1 p-5">
             <div className="flex items-center gap-2">
               <CalendarClock className="h-4 w-4 text-primary" />
@@ -574,14 +574,14 @@ export function PlanningSections({
           </CardHeader>
           <CardContent className="space-y-3 p-5 pt-0">
             {monthlyReports.length === 0 ? (
-              <div className="rounded-[18px] border border-dashed border-border/80 bg-background/40 p-5 text-center text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-dashed border-white/[0.1] bg-white/[0.02] p-5 text-center text-sm text-muted-foreground">
                 Henuz aylik rapor olusmadi.
               </div>
             ) : (
               monthlyReports.map((report) => (
                 <div
                   key={report.id}
-                  className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-4"
+                  className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-4"
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-sm font-medium">{report.title}</p>

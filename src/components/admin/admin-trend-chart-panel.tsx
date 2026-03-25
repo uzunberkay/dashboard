@@ -8,7 +8,7 @@ const DynamicAdminTrendChart = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[380px] animate-pulse rounded-[24px] border border-border/70 bg-card/70" />
+      <div className="h-[380px] rounded-2xl border border-white/[0.08] bg-card/50 backdrop-blur-xl glass-skeleton" />
     ),
   }
 )

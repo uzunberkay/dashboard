@@ -197,7 +197,7 @@ export function AdminUserActions({
   }
 
   return (
-    <div className="rounded-[24px] border border-border/70 bg-card/85 p-5">
+    <div className="rounded-[24px] border border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06] p-5">
       <div className="flex flex-col gap-4">
         <div>
           <p className="text-sm font-semibold">Admin islemleri</p>
@@ -207,7 +207,7 @@ export function AdminUserActions({
         </div>
 
         {canManageThisAccount ? (
-          <div className="grid gap-4 rounded-[22px] border border-border/70 bg-background/70 p-4">
+          <div className="grid gap-4 rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
             <div className="grid gap-4 lg:grid-cols-2">
               <div className="space-y-2">
                 <label
@@ -277,7 +277,7 @@ export function AdminUserActions({
             </div>
           </div>
         ) : (
-          <div className="rounded-[22px] border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground">
+          <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4 text-sm text-muted-foreground">
             Bu hesap tipi icin rol veya durum degisikligi isteme yetkiniz bulunmuyor.
           </div>
         )}

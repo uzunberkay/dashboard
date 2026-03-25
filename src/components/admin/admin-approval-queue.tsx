@@ -38,7 +38,7 @@ function RequestCard({
   onReject: (request: AdminApprovalRequestSummary) => void
 }) {
   return (
-    <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+    <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-2">
           <div className="flex flex-wrap gap-2">
@@ -76,13 +76,13 @@ function RequestCard({
       </div>
 
       {request.reason ? (
-        <div className="mt-4 rounded-xl border border-border/70 bg-card/80 p-3 text-sm text-muted-foreground">
+        <div className="mt-4 rounded-xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-3 text-sm text-muted-foreground">
           Istek notu: {request.reason}
         </div>
       ) : null}
 
       {request.rejectionReason ? (
-        <div className="mt-3 rounded-xl border border-border/70 bg-card/80 p-3 text-sm text-muted-foreground">
+        <div className="mt-3 rounded-xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm p-3 text-sm text-muted-foreground">
           Reddetme notu: {request.rejectionReason}
         </div>
       ) : null}
@@ -175,7 +175,7 @@ export function AdminApprovalQueue({ data }: AdminApprovalQueueProps) {
 
   return (
     <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-      <Card className="rounded-[24px] border-border/70 bg-card/90">
+      <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
             <Clock3 className="h-5 w-5 text-primary" />
@@ -184,7 +184,7 @@ export function AdminApprovalQueue({ data }: AdminApprovalQueueProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           {data.pending.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border/70 px-4 py-8 text-center text-sm text-muted-foreground">
+            <div className="rounded-2xl border border-dashed border-white/[0.08] px-4 py-8 text-center text-sm text-muted-foreground">
               Bekleyen approval istegi yok.
             </div>
           ) : (
@@ -201,7 +201,7 @@ export function AdminApprovalQueue({ data }: AdminApprovalQueueProps) {
         </CardContent>
       </Card>
 
-      <Card className="rounded-[24px] border-border/70 bg-card/90">
+      <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
             <CheckCheck className="h-5 w-5 text-emerald-500" />
@@ -210,7 +210,7 @@ export function AdminApprovalQueue({ data }: AdminApprovalQueueProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           {data.recent.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border/70 px-4 py-8 text-center text-sm text-muted-foreground">
+            <div className="rounded-2xl border border-dashed border-white/[0.08] px-4 py-8 text-center text-sm text-muted-foreground">
               Yakinda sonuclanmis approval kaydi yok.
             </div>
           ) : (

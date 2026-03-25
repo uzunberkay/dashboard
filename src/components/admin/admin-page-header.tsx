@@ -14,7 +14,7 @@ export function AdminPageHeader({
   actions,
 }: AdminPageHeaderProps) {
   return (
-    <div className="flex flex-col gap-5 rounded-[28px] border border-border/70 bg-card/85 p-6 shadow-sm backdrop-blur-sm lg:flex-row lg:items-end lg:justify-between">
+    <div className="flex flex-col gap-5 rounded-[28px] border border-white/[0.12] bg-card/70 backdrop-blur-xl dark:border-white/[0.06] p-6 shadow-sm backdrop-blur-sm lg:flex-row lg:items-end lg:justify-between">
       <div className="space-y-3">
         {eyebrow && (
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary/80">{eyebrow}</p>

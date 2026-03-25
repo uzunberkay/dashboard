@@ -283,7 +283,7 @@ export default function BudgetsPage() {
     const scopeLabel = goal.scope === "CATEGORY" ? (goal.category?.name ?? "Kategori") : "Toplam"
 
     return (
-      <Card key={goal.id} className="group rounded-[24px] border-border/70 bg-card/95">
+      <Card key={goal.id} className="group rounded-[24px] ">
         <CardHeader className="space-y-3 pb-2">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-1">
@@ -337,11 +337,11 @@ export default function BudgetsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Mevcut durum</p>
               <p className="mt-1 text-lg font-semibold">{formatCurrency(current)}</p>
             </div>
-            <div className="rounded-[18px] border border-border/70 bg-background/55 px-4 py-3">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3">
               <p className="text-xs text-muted-foreground">Ilerleme</p>
               <p className="mt-1 text-lg font-semibold">%{Math.min(Math.round(percentage), 999)}</p>
             </div>
@@ -439,7 +439,7 @@ export default function BudgetsPage() {
         actions={(
           <>
             <Select value={month} onValueChange={setMonth}>
-              <SelectTrigger className="w-full rounded-xl border-border/70 bg-background/70 sm:w-[220px]">
+              <SelectTrigger className="w-full rounded-xl  sm:w-[220px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -470,7 +470,7 @@ export default function BudgetsPage() {
       />
 
       {focusMeta ? (
-        <Card className="rounded-[22px] border-primary/20 bg-primary/5">
+        <Card className="rounded-2xl border-primary/15 bg-primary/5 backdrop-blur-sm">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Compass className="h-4 w-4 text-primary" />
@@ -483,7 +483,7 @@ export default function BudgetsPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {summaryCards.map((card) => (
-          <Card key={card.title} className="rounded-[24px] border-border/70 bg-card/95">
+          <Card key={card.title} className="rounded-[24px] ">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 {card.title}
@@ -505,7 +505,7 @@ export default function BudgetsPage() {
           {Array.from({ length: 4 }).map((_, index) => (
             <div
               key={index}
-              className="h-44 animate-pulse rounded-[24px] border border-border/70 bg-card/70"
+              className="h-44 animate-pulse rounded-[24px] border "
             />
           ))}
         </div>
