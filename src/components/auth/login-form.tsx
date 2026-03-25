@@ -4,6 +4,7 @@ import { useState } from "react"
 import { getSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { AlertCircle, ArrowRight } from "lucide-react"
+import { hasAdminAccess } from "@/lib/admin/permissions"
 import { PasswordField } from "@/components/auth/password-field"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -63,7 +64,7 @@ export function LoginForm({
 
       const session = await getSession()
       const isAdminRoute = nextPath.startsWith("/admin")
-      const isAdminUser = session?.user?.role === "ADMIN"
+      const isAdminUser = hasAdminAccess(session?.user?.role)
 
       if ((adminOnly || isAdminRoute) && !isAdminUser) {
         await signOut({ redirect: false })

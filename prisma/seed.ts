@@ -108,7 +108,7 @@ async function main() {
       email: "demo@example.com",
       password: hashedPassword,
       name: "Demo Kullanici",
-      role: "ADMIN",
+      role: "SUPER_ADMIN",
     },
   })
 

@@ -2,14 +2,16 @@ import { Cpu, ShieldCheck, Users } from "lucide-react"
 import { AdminPageHeader } from "@/components/admin/admin-page-header"
 import { AdminSettingsForm } from "@/components/admin/admin-settings-form"
 import { requireAdminPageSession } from "@/lib/admin/auth"
+import { formatAdminRole } from "@/lib/admin/labels"
 import { getAdminSettingsData } from "@/lib/admin/data"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default async function AdminSettingsPage() {
-  const { admin } = await requireAdminPageSession()
+  const { admin } = await requireAdminPageSession("settings:view")
   const data = await getAdminSettingsData({
     name: admin.name,
     email: admin.email,
+    role: admin.role,
   })
 
   return (
@@ -81,14 +83,23 @@ export default async function AdminSettingsPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Mevcut admin</p>
               <p className="mt-1 font-medium">{data.currentAdmin.name}</p>
               <p className="text-muted-foreground">{data.currentAdmin.email}</p>
+              <p className="text-muted-foreground">{formatAdminRole(data.currentAdmin.role)}</p>
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Admin sayisi</p>
-              <p className="mt-1 font-medium">{data.governance.adminCount}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Staff sayisi</p>
+              <p className="mt-1 font-medium">{data.governance.staffCount}</p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Super admin</p>
+              <p className="mt-1 font-medium">{data.governance.superAdminCount}</p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Pasif kullanicilar</p>
               <p className="mt-1 font-medium">{data.governance.inactiveUsers}</p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Bekleyen onaylar</p>
+              <p className="mt-1 font-medium">{data.governance.pendingApprovals}</p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Kayitli gorunumler</p>

@@ -4,7 +4,7 @@ import { getAdminActivityData } from "@/lib/admin/data"
 import { adminActivityFiltersSchema } from "@/lib/validations"
 
 export async function GET(request: NextRequest) {
-  const adminSession = await requireAdminApiSession()
+  const adminSession = await requireAdminApiSession("activity:view")
   if ("response" in adminSession) {
     return adminSession.response
   }

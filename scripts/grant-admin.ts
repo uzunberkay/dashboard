@@ -10,7 +10,7 @@ async function main() {
 
   const user = await prisma.user.update({
     where: { email },
-    data: { role: "ADMIN", isActive: true },
+    data: { role: "SUPER_ADMIN", isActive: true },
     select: {
       id: true,
       email: true,

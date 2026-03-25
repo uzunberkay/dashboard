@@ -1,18 +1,35 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Bookmark, Goal, History, ShieldCheck, Wallet, WalletCards } from "lucide-react"
+import {
+  Bookmark,
+  Clock3,
+  Download,
+  Goal,
+  History,
+  KeyRound,
+  Laptop,
+  ShieldCheck,
+  Wallet,
+  WalletCards,
+} from "lucide-react"
 import { AdminActivityFeed } from "@/components/admin/admin-activity-feed"
 import { AdminPageHeader } from "@/components/admin/admin-page-header"
 import { AdminUserActions } from "@/components/admin/admin-user-actions"
+import { AdminUserNotesPanel } from "@/components/admin/admin-user-notes-panel"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { requireAdminPageSession } from "@/lib/admin/auth"
-import { getAdminUserDetailData } from "@/lib/admin/data"
-import { formatAdminRole } from "@/lib/admin/labels"
+import {
+  formatAdminRole,
+  formatApprovalActionType,
+  formatApprovalStatus,
+} from "@/lib/admin/labels"
+import { getAdminUserDetailData } from "@/lib/admin/user-detail"
 import { formatCurrency, formatDateTime } from "@/lib/utils"
+import type { AdminApprovalRequestSummary, AdminUserRole } from "@/types/admin"
 
 type RouteParams = Promise<{
   id: string
@@ -23,35 +40,74 @@ const transactionTypeLabel = {
   EXPENSE: "Gider",
 } as const
 
+function formatMoney(value: number | null, visible: boolean) {
+  return visible && value !== null ? formatCurrency(value) : "Gizli"
+}
+
+function getRoleBadgeVariant(role: AdminUserRole) {
+  return role === "USER" ? "secondary" : "default"
+}
+
+function getApprovalStatusVariant(request: AdminApprovalRequestSummary) {
+  switch (request.status) {
+    case "APPROVED":
+      return "success" as const
+    case "REJECTED":
+    case "EXPIRED":
+      return "warning" as const
+    default:
+      return request.isSensitive ? ("warning" as const) : ("secondary" as const)
+  }
+}
+
 export default async function AdminUserDetailPage({
   params,
 }: {
   params: RouteParams
 }) {
-  const { admin } = await requireAdminPageSession()
+  const { admin } = await requireAdminPageSession("users:view")
   const { id } = await params
-  const detail = await getAdminUserDetailData(id)
+  const detail = await getAdminUserDetailData({
+    userId: id,
+    viewer: {
+      id: admin.id,
+      role: admin.role,
+    },
+  })
 
   if (!detail) {
     notFound()
   }
 
-  const topCategoryMax = detail.topCategories[0]?.totalAmount ?? 1
+  const topCategoryMax = Math.max(
+    1,
+    ...detail.topCategories.map((category) =>
+      detail.sensitiveDataVisible ? (category.totalAmount ?? 0) : category.transactionCount
+    )
+  )
+  const showActionPanel =
+    detail.canRequestUserOps || detail.canRevokeSessions || detail.canRequestRawExport
 
   return (
     <div className="space-y-6">
       <AdminPageHeader
         eyebrow="Kullanici detayi"
         title={detail.user.email}
-        description="Kullanici profili, finansal davranis, yonetsel degisiklikler ve audit akislarini tek ekrandan inceleyin."
+        description="Kullanici profili, davranis ritmi, cihaz gecmisi, onay akisi ve internal operasyon notlarini tek ekranda inceleyin."
         actions={(
           <>
-            <Badge variant={detail.user.role === "ADMIN" ? "default" : "secondary"}>
-              {formatAdminRole(detail.user.role)}
-            </Badge>
+            <Badge variant={getRoleBadgeVariant(detail.user.role)}>{formatAdminRole(detail.user.role)}</Badge>
             <Badge variant={detail.user.isActive ? "success" : "warning"}>
               {detail.user.isActive ? "Aktif" : "Pasif"}
             </Badge>
+            {detail.approvedRawExport ? (
+              <Button variant="outline" asChild>
+                <a href={detail.approvedRawExport.url}>
+                  <Download className="h-4 w-4" />
+                  Onayli exportu indir
+                </a>
+              </Button>
+            ) : null}
             <Button variant="outline" asChild>
               <Link href={`/admin/activity?target=${encodeURIComponent(detail.user.email)}`}>
                 <History className="h-4 w-4" />
@@ -82,8 +138,12 @@ export default async function AdminUserDetailPage({
           </CardHeader>
           <CardContent className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-3xl font-semibold">{formatCurrency(detail.stats.totalIncome)}</p>
-              <p className="text-sm text-muted-foreground">kayitli giris</p>
+              <p className="text-3xl font-semibold">
+                {formatMoney(detail.stats.totalIncome, detail.sensitiveDataVisible)}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {detail.sensitiveDataVisible ? "kayitli giris" : "masked gorunum"}
+              </p>
             </div>
             <WalletCards className="h-5 w-5 text-emerald-500" />
           </CardContent>
@@ -95,8 +155,12 @@ export default async function AdminUserDetailPage({
           </CardHeader>
           <CardContent className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-3xl font-semibold">{formatCurrency(detail.stats.totalExpense)}</p>
-              <p className="text-sm text-muted-foreground">kayitli cikis</p>
+              <p className="text-3xl font-semibold">
+                {formatMoney(detail.stats.totalExpense, detail.sensitiveDataVisible)}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {detail.sensitiveDataVisible ? "kayitli cikis" : "masked gorunum"}
+              </p>
             </div>
             <Bookmark className="h-5 w-5 text-amber-500" />
           </CardContent>
@@ -118,7 +182,7 @@ export default async function AdminUserDetailPage({
         </Card>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+      <div className="grid gap-6 xl:grid-cols-[0.82fr_1.18fr]">
         <div className="space-y-6">
           <Card className="rounded-[24px] border-border/70 bg-card/90">
             <CardHeader className="space-y-2">
@@ -138,6 +202,10 @@ export default async function AdminUserDetailPage({
                 <p className="mt-1 font-medium">
                   {detail.user.lastLoginAt ? formatDateTime(detail.user.lastLoginAt) : "Henuz giris yok"}
                 </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Session version</p>
+                <p className="mt-1 font-medium">{detail.user.sessionVersion}</p>
               </div>
             </CardContent>
           </Card>
@@ -159,11 +227,15 @@ export default async function AdminUserDetailPage({
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     <div>
                       <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Gelir</p>
-                      <p className="mt-1 font-semibold">{formatCurrency(window.totalIncome)}</p>
+                      <p className="mt-1 font-semibold">
+                        {formatMoney(window.totalIncome, detail.sensitiveDataVisible)}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Gider</p>
-                      <p className="mt-1 font-semibold">{formatCurrency(window.totalExpense)}</p>
+                      <p className="mt-1 font-semibold">
+                        {formatMoney(window.totalExpense, detail.sensitiveDataVisible)}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -171,11 +243,53 @@ export default async function AdminUserDetailPage({
             </CardContent>
           </Card>
 
-          <AdminUserActions
+          <Card className="rounded-[24px] border-border/70 bg-card/90">
+            <CardHeader>
+              <CardTitle>Son cihazlar ve oturum izleri</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {detail.recentDevices.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-border/70 px-4 py-8 text-center text-sm text-muted-foreground">
+                  Henuz login cihaz kaydi gorunmuyor.
+                </div>
+              ) : (
+                detail.recentDevices.map((device, index) => (
+                  <div key={`${device.ipAddress ?? "ip"}-${index}`} className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <Laptop className="h-4 w-4 text-primary" />
+                          <p className="text-sm font-semibold">{device.ipAddress ?? "IP bilinmiyor"}</p>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{device.userAgent ?? "User-Agent kaydi yok"}</p>
+                      </div>
+                      <Badge variant="secondary">{device.loginCount} giris</Badge>
+                    </div>
+                    <p className="mt-3 text-xs text-muted-foreground">Son gorulme: {formatDateTime(device.lastSeenAt)}</p>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+
+          {showActionPanel ? (
+            <AdminUserActions
+              userId={detail.user.id}
+              role={detail.user.role}
+              isActive={detail.user.isActive}
+              isSelf={admin.id === detail.user.id}
+              viewerRole={admin.role}
+              canRequestUserOps={detail.canRequestUserOps}
+              canManageStaffRoles={detail.canManageStaffRoles}
+              canRevokeSessions={detail.canRevokeSessions}
+              canRequestRawExport={detail.canRequestRawExport}
+            />
+          ) : null}
+
+          <AdminUserNotesPanel
             userId={detail.user.id}
-            role={detail.user.role}
-            isActive={detail.user.isActive}
-            isSelf={admin.id === detail.user.id}
+            notes={detail.notes}
+            canCreate={detail.canCreateNotes}
           />
 
           <Card className="rounded-[24px] border-border/70 bg-card/90">
@@ -186,21 +300,27 @@ export default async function AdminUserDetailPage({
               {detail.topCategories.length === 0 ? (
                 <p className="text-sm text-muted-foreground">Henuz kategori analitigi yok.</p>
               ) : (
-                detail.topCategories.map((category) => (
-                  <div key={category.id} className="space-y-2">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-medium">{category.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {category.parentName ? `${category.parentName} | ` : ""}
-                          {category.transactionCount} islem
+                detail.topCategories.map((category) => {
+                  const metric = detail.sensitiveDataVisible ? category.totalAmount ?? 0 : category.transactionCount
+
+                  return (
+                    <div key={category.id} className="space-y-2">
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-medium">{category.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {category.parentName ? `${category.parentName} | ` : ""}
+                            {category.transactionCount} islem
+                          </p>
+                        </div>
+                        <p className="text-sm font-semibold">
+                          {detail.sensitiveDataVisible ? formatCurrency(metric) : `${category.transactionCount} islem`}
                         </p>
                       </div>
-                      <p className="text-sm font-semibold">{formatCurrency(category.totalAmount)}</p>
+                      <Progress value={(metric / topCategoryMax) * 100} className="h-2.5" />
                     </div>
-                    <Progress value={(category.totalAmount / topCategoryMax) * 100} className="h-2.5" />
-                  </div>
-                ))
+                  )
+                })
               )}
             </CardContent>
           </Card>
@@ -231,11 +351,81 @@ export default async function AdminUserDetailPage({
                       </TableCell>
                       <TableCell>{transaction.categoryName ?? "Kategorisiz"}</TableCell>
                       <TableCell>{formatDateTime(transaction.date)}</TableCell>
-                      <TableCell className="text-right font-medium">{formatCurrency(transaction.amount)}</TableCell>
+                      <TableCell className="text-right font-medium">
+                        {detail.sensitiveDataVisible && transaction.amount !== null
+                          ? formatCurrency(transaction.amount)
+                          : "Gizli"}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-[24px] border-border/70 bg-card/90">
+            <CardHeader>
+              <CardTitle>Son onay istekleri</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {detail.recentApprovalRequests.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-border/70 px-4 py-8 text-center text-sm text-muted-foreground">
+                  Bu kullanici icin son onay kaydi bulunmuyor.
+                </div>
+              ) : (
+                detail.recentApprovalRequests.map((request) => (
+                  <div key={request.id} className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap gap-2">
+                          <Badge variant={getApprovalStatusVariant(request)}>
+                            {formatApprovalStatus(request.status)}
+                          </Badge>
+                          <Badge variant="secondary">{formatApprovalActionType(request.actionType)}</Badge>
+                        </div>
+                        <p className="text-sm font-semibold">{request.requestedBy.name}</p>
+                        <p className="text-xs text-muted-foreground">{formatDateTime(request.createdAt)}</p>
+                      </div>
+                      {request.availableDownload ? (
+                        <Button variant="outline" size="sm" asChild>
+                          <a href={request.availableDownload.url}>
+                            <Download className="h-4 w-4" />
+                            Exportu indir
+                          </a>
+                        </Button>
+                      ) : null}
+                    </div>
+
+                    <div className="mt-4 space-y-2 text-sm">
+                      {request.summaryLines.map((line) => (
+                        <p key={`${request.id}-${line}`}>{line}</p>
+                      ))}
+                    </div>
+
+                    {request.reason ? (
+                      <div className="mt-4 rounded-xl border border-border/70 bg-card/70 p-3 text-sm text-muted-foreground">
+                        Istek notu: {request.reason}
+                      </div>
+                    ) : null}
+
+                    {request.rejectionReason ? (
+                      <div className="mt-3 rounded-xl border border-border/70 bg-card/70 p-3 text-sm text-muted-foreground">
+                        Reddetme notu: {request.rejectionReason}
+                      </div>
+                    ) : null}
+
+                    {request.approvedBy ? (
+                      <p className="mt-3 text-xs text-muted-foreground">
+                        Karari veren: {request.approvedBy.name} | {formatDateTime(request.decidedAt ?? request.createdAt)}
+                      </p>
+                    ) : (
+                      <p className="mt-3 text-xs text-muted-foreground">
+                        Son gecerlilik: {formatDateTime(request.expiresAt)}
+                      </p>
+                    )}
+                  </div>
+                ))
+              )}
             </CardContent>
           </Card>
 
@@ -263,6 +453,26 @@ export default async function AdminUserDetailPage({
                   </div>
                 ))
               )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-[24px] border-border/70 bg-card/90">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <Clock3 className="h-5 w-5 text-primary" />
+                <CardTitle>Oturum ve event timeline</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+                <div className="flex items-center gap-2">
+                  <KeyRound className="h-4 w-4 text-primary" />
+                  <p className="text-sm font-semibold">Session version: {detail.user.sessionVersion}</p>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Session revoke aksiyonu uygulandiginda bu sayi artar ve eski tokenlar gecersiz hale gelir.
+                </p>
+              </div>
             </CardContent>
           </Card>
 

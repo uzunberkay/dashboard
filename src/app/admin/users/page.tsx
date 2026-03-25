@@ -8,6 +8,8 @@ import { AdminUsersTable } from "@/components/admin/admin-users-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { requireAdminPageSession } from "@/lib/admin/auth"
+import { hasPermission } from "@/lib/admin/permissions"
 import { getSingleSearchParam } from "@/lib/admin/query"
 import { getAdminDefaultSavedView, getAdminSavedViews, getAdminUsersData } from "@/lib/admin/data"
 import { adminUsersFiltersSchema } from "@/lib/validations"
@@ -20,8 +22,8 @@ const quickSegments = [
     href: "/admin/users",
   },
   {
-    label: "Yonetici hesaplar",
-    href: "/admin/users?role=ADMIN",
+    label: "Staff hesaplari",
+    href: "/admin/users?role=staff",
   },
   {
     label: "Pasif hesaplar",
@@ -38,6 +40,7 @@ export default async function AdminUsersPage({
 }: {
   searchParams: SearchParams
 }) {
+  const { admin } = await requireAdminPageSession("users:view")
   const resolvedSearchParams = await searchParams
   const hasExplicitFilters = Boolean(
     getSingleSearchParam(resolvedSearchParams.query) ||
@@ -65,7 +68,7 @@ export default async function AdminUsersPage({
 
   const [data, savedViews] = await Promise.all([
     getAdminUsersData(filters),
-    getAdminSavedViews("USERS"),
+    getAdminSavedViews("USERS", admin.role),
   ])
 
   const currentQuery = new URLSearchParams({
@@ -131,8 +134,12 @@ export default async function AdminUsersPage({
               className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
             >
               <option value="all">Tum roller</option>
-              <option value="ADMIN">Yonetici</option>
               <option value="USER">Kullanici</option>
+              <option value="SUPPORT">Destek</option>
+              <option value="ANALYST">Analist</option>
+              <option value="OPS_ADMIN">Operasyon Admin</option>
+              <option value="SUPER_ADMIN">Super Admin</option>
+              <option value="staff">Tum staff</option>
             </select>
           </div>
 
@@ -211,7 +218,7 @@ export default async function AdminUsersPage({
         </Badge>
       </div>
 
-      <AdminUsersTable users={data.items} />
+      <AdminUsersTable users={data.items} canBulkUpdate={hasPermission(admin.role, "users:bulk:update")} />
 
       {data.pagination.totalPages > 1 ? (
         <AdminPagination

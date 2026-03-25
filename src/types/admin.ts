@@ -1,6 +1,7 @@
-export type AdminUserRole = "USER" | "ADMIN"
+export type AdminUserRole = "USER" | "SUPPORT" | "ANALYST" | "OPS_ADMIN" | "SUPER_ADMIN"
+export type AdminStaffRole = Exclude<AdminUserRole, "USER">
 export type AdminDashboardRange = "7d" | "30d" | "90d"
-export type AdminDashboardSegment = "all" | "active" | "inactive" | "admin"
+export type AdminDashboardSegment = "all" | "active" | "inactive" | "staff"
 export type AdminUsersSortField = "createdAt" | "lastLoginAt" | "transactionCount"
 export type SortDirection = "asc" | "desc"
 export type AdminSavedViewScope = "DASHBOARD" | "ACTIVITY" | "USERS"
@@ -22,6 +23,44 @@ export type AdminActivityEvent =
   | "SAVED_VIEW_CREATED"
   | "SAVED_VIEW_UPDATED"
   | "SAVED_VIEW_DELETED"
+  | "APPROVAL_REQUESTED"
+  | "APPROVAL_APPROVED"
+  | "APPROVAL_REJECTED"
+  | "USER_NOTE_CREATED"
+  | "USER_SESSIONS_REVOKED"
+  | "RAW_EXPORT_REQUESTED"
+  | "RAW_EXPORT_DOWNLOADED"
+  | "FINANCE_REMINDER_JOB_SUCCEEDED"
+  | "FINANCE_REMINDER_JOB_FAILED"
+export type AdminApprovalActionType =
+  | "USER_ACCOUNT_UPDATE"
+  | "BULK_USER_ACCOUNT_UPDATE"
+  | "ADMIN_SETTINGS_UPDATE"
+  | "RAW_USER_EXPORT"
+export type AdminApprovalRequestStatus = "PENDING" | "APPROVED" | "REJECTED" | "EXPIRED"
+export type AdminPermission =
+  | "dashboard:view"
+  | "users:view"
+  | "users:detail:masked"
+  | "users:detail:full"
+  | "users:notes:create"
+  | "users:sessions:revoke"
+  | "users:request:user-ops"
+  | "users:manage:staff"
+  | "users:bulk:update"
+  | "activity:view"
+  | "reports:view"
+  | "reports:export:aggregate"
+  | "reports:export:activity"
+  | "savedViews:manage"
+  | "system:view"
+  | "system:jobs:run"
+  | "settings:view"
+  | "settings:request:update"
+  | "approvals:view"
+  | "approvals:approve:user-ops"
+  | "approvals:approve:sensitive"
+  | "users:raw-export:request"
 
 export interface AdminPaginationState {
   page: number
@@ -30,6 +69,14 @@ export interface AdminPaginationState {
   totalPages: number
   hasNextPage: boolean
   hasPreviousPage: boolean
+}
+
+export interface AdminCurrentUser {
+  id: string
+  name: string
+  email: string
+  role: AdminStaffRole
+  permissions: AdminPermission[]
 }
 
 export interface AdminDashboardFilters {
@@ -81,7 +128,7 @@ export interface AdminTopCategory {
   id: string
   name: string
   parentName: string | null
-  totalAmount: number
+  totalAmount: number | null
   transactionCount: number
 }
 
@@ -128,7 +175,7 @@ export interface AdminUserListItem {
 
 export interface AdminUsersFilters {
   query: string
-  role: "all" | AdminUserRole
+  role: "all" | "staff" | AdminUserRole
   status: "all" | "active" | "inactive"
   sort: AdminUsersSortField
   direction: SortDirection
@@ -143,8 +190,66 @@ export interface AdminUsersResponse {
 export interface AdminUserWindowStat {
   days: number
   transactionCount: number
-  totalIncome: number
-  totalExpense: number
+  totalIncome: number | null
+  totalExpense: number | null
+}
+
+export interface AdminUserDeviceSummary {
+  ipAddress: string | null
+  userAgent: string | null
+  lastSeenAt: string
+  loginCount: number
+}
+
+export interface AdminUserNoteItem {
+  id: string
+  body: string
+  createdAt: string
+  updatedAt: string
+  authorName: string
+  authorEmail: string | null
+}
+
+export interface AdminApprovalRequestSummary {
+  id: string
+  actionType: AdminApprovalActionType
+  status: AdminApprovalRequestStatus
+  createdAt: string
+  expiresAt: string
+  decidedAt: string | null
+  reason: string | null
+  rejectionReason: string | null
+  targetUser: {
+    id: string | null
+    name: string
+    email: string | null
+    role: AdminUserRole | null
+  } | null
+  requestedBy: {
+    id: string
+    name: string
+    email: string | null
+    role: AdminUserRole
+  }
+  approvedBy: {
+    id: string
+    name: string
+    email: string | null
+    role: AdminUserRole
+  } | null
+  summaryLines: string[]
+  isSensitive: boolean
+  canApprove: boolean
+  canReject: boolean
+  availableDownload: {
+    url: string
+    expiresAt: string
+  } | null
+}
+
+export interface AdminApprovalQueueData {
+  pending: AdminApprovalRequestSummary[]
+  recent: AdminApprovalRequestSummary[]
 }
 
 export interface AdminUserDetail {
@@ -154,13 +259,20 @@ export interface AdminUserDetail {
     email: string
     role: AdminUserRole
     isActive: boolean
+    sessionVersion: number
     createdAt: string
     lastLoginAt: string | null
   }
+  sensitiveDataVisible: boolean
+  canCreateNotes: boolean
+  canRequestUserOps: boolean
+  canManageStaffRoles: boolean
+  canRevokeSessions: boolean
+  canRequestRawExport: boolean
   stats: {
     totalTransactions: number
-    totalIncome: number
-    totalExpense: number
+    totalIncome: number | null
+    totalExpense: number | null
     goalCount: number
     categoryCount: number
   }
@@ -168,7 +280,7 @@ export interface AdminUserDetail {
   recentTransactions: Array<{
     id: string
     type: string
-    amount: number
+    amount: number | null
     description: string | null
     date: string
     categoryName: string | null
@@ -176,6 +288,13 @@ export interface AdminUserDetail {
   topCategories: AdminTopCategory[]
   recentActivity: AdminActivityItem[]
   recentAdminChanges: AdminActivityExplorerItem[]
+  recentDevices: AdminUserDeviceSummary[]
+  notes: AdminUserNoteItem[]
+  recentApprovalRequests: AdminApprovalRequestSummary[]
+  approvedRawExport: {
+    url: string
+    expiresAt: string
+  } | null
 }
 
 export interface AdminActivityFilters {
@@ -206,6 +325,19 @@ export interface AdminSystemData {
     dbDegradedThresholdMs: number
     dashboardCacheTtlSec: number
     systemCacheTtlSec: number
+  }
+  approvals: {
+    pendingCount: number
+    sensitivePendingCount: number
+    expiredCount: number
+  }
+  financeReminderJob: {
+    lastStatus: "success" | "failed" | "never"
+    lastRunAt: string | null
+    lastProcessedCount: number | null
+    lastError: string | null
+    pendingReminderCount: number
+    failedReminderCount: number
   }
   recentErrors: Array<{
     message: string
@@ -241,16 +373,20 @@ export interface AdminSettingsData {
   currentAdmin: {
     name: string
     email: string
+    role: AdminStaffRole
   }
   security: {
     sessionStrategy: string
     roleGuard: string
     loginRateLimit: string
+    approvalFlow: string
   }
   governance: {
-    adminCount: number
+    staffCount: number
+    superAdminCount: number
     inactiveUsers: number
     savedViews: number
+    pendingApprovals: number
   }
   values: AdminSettingValueMap
   definitions: AdminSettingDefinition[]
@@ -258,4 +394,18 @@ export interface AdminSettingsData {
 
 export interface AdminReportsData {
   items: AdminSavedViewSummary[]
+}
+
+export interface AdminAggregateExportData {
+  generatedAt: string
+  userCounts: Record<AdminUserRole, number>
+  inactiveUsers: number
+  transactionCount: number
+  pendingApprovals: number
+  reminderCounts: {
+    pending: number
+    failed: number
+    sent: number
+  }
+  monthlyReportCount: number
 }

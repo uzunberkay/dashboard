@@ -81,6 +81,7 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           role: user.role,
           isActive: user.isActive,
+          sessionVersion: user.sessionVersion,
         }
       },
     }),
@@ -93,6 +94,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email ?? null
         session.user.role = token.role ?? "USER"
         session.user.isActive = token.isActive ?? true
+        session.user.sessionVersion = token.sessionVersion ?? 0
       }
 
       return session
@@ -104,7 +106,41 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email
         token.role = user.role
         token.isActive = user.isActive
+        token.sessionVersion = user.sessionVersion
       }
+
+      if (!token.id) {
+        return token
+      }
+
+      const currentUser = await prisma.user.findUnique({
+        where: { id: token.id },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          isActive: true,
+          sessionVersion: true,
+        },
+      })
+
+      if (!currentUser || !currentUser.isActive) {
+        return {}
+      }
+
+      if (
+        token.sessionVersion !== undefined &&
+        token.sessionVersion !== currentUser.sessionVersion
+      ) {
+        return {}
+      }
+
+      token.name = currentUser.name
+      token.email = currentUser.email
+      token.role = currentUser.role
+      token.isActive = currentUser.isActive
+      token.sessionVersion = currentUser.sessionVersion
 
       return token
     },

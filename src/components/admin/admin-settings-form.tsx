@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import type { AdminSettingDefinition, AdminSettingValueMap } from "@/types/admin"
 
 interface AdminSettingsFormProps {
@@ -23,6 +24,7 @@ function toFormState(values: AdminSettingValueMap): FormState {
 export function AdminSettingsForm({ definitions, values }: AdminSettingsFormProps) {
   const router = useRouter()
   const [form, setForm] = useState<FormState>(() => toFormState(values))
+  const [reason, setReason] = useState("")
   const [isPending, setIsPending] = useState(false)
 
   const dirtyKeys = useMemo(
@@ -58,6 +60,15 @@ export function AdminSettingsForm({ definitions, values }: AdminSettingsFormProp
       return accumulator
     }, {})
 
+    if (reason.trim().length < 3) {
+      toast({
+        title: "Onay notu gerekli",
+        description: "Lutfen en az 3 karakterlik bir gerekce girin.",
+        variant: "warning",
+      })
+      return
+    }
+
     setIsPending(true)
 
     try {
@@ -66,10 +77,19 @@ export function AdminSettingsForm({ definitions, values }: AdminSettingsFormProp
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          ...payload,
+          reason: reason.trim(),
+        }),
       })
 
-      const result = (await response.json()) as { error?: string }
+      const result = (await response.json()) as {
+        error?: string
+        mutation?: {
+          mode?: "approval_requested" | "completed"
+          message?: string
+        }
+      }
       if (!response.ok) {
         toast({
           title: "Ayarlar guncellenemedi",
@@ -80,10 +100,14 @@ export function AdminSettingsForm({ definitions, values }: AdminSettingsFormProp
       }
 
       toast({
-        title: "Ayarlar kaydedildi",
-        description: "Policy degerleri ve cache davranisi yenilendi.",
+        title:
+          result.mutation?.mode === "approval_requested"
+            ? "Onay istegi olusturuldu"
+            : "Ayarlar kaydedildi",
+        description: result.mutation?.message ?? "Policy degerleri ve cache davranisi yenilendi.",
         variant: "success",
       })
+      setReason("")
       router.refresh()
     } catch {
       toast({
@@ -141,10 +165,23 @@ export function AdminSettingsForm({ definitions, values }: AdminSettingsFormProp
         ))}
       </div>
 
+      <div className="mt-5 rounded-[22px] border border-border/70 bg-background/70 p-4">
+        <p className="text-sm font-semibold">Onay gerekcesi</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Kritik ayar degisiklikleri dogrudan uygulanmaz; ikinci admin onayi icin net bir not birakin.
+        </p>
+        <Textarea
+          value={reason}
+          onChange={(event) => setReason(event.target.value)}
+          placeholder="Degisikligin nedeni, beklenen etki ve gerekiyorsa geri donus plani"
+          className="mt-4 min-h-[112px]"
+        />
+      </div>
+
       <div className="mt-5 flex items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">{dirtyKeys.length} alan degistirildi</p>
-        <Button onClick={handleSubmit} disabled={isPending}>
-          {isPending ? "Kaydediliyor..." : "Policy ayarlarini kaydet"}
+        <Button onClick={handleSubmit} disabled={isPending || reason.trim().length < 3}>
+          {isPending ? "Gonderiliyor..." : "Onaya gonder"}
         </Button>
       </div>
     </div>

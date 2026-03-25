@@ -35,8 +35,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Bu e-posta adresi zaten kayitli" }, { status: 409 })
     }
 
-    const adminCount = await prisma.user.count({
-      where: { role: "ADMIN" },
+    const staffCount = await prisma.user.count({
+      where: {
+        role: {
+          not: "USER",
+        },
+      },
     })
 
     const hashedPassword = await hash(password, 12)
@@ -46,7 +50,7 @@ export async function POST(req: Request) {
         name,
         email,
         password: hashedPassword,
-        role: adminCount === 0 ? "ADMIN" : "USER",
+        role: staffCount === 0 ? "SUPER_ADMIN" : "USER",
       },
     })
 

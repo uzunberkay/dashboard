@@ -4,7 +4,7 @@ import { getAdminDashboardData } from "@/lib/admin/data"
 import { adminDashboardFiltersSchema } from "@/lib/validations"
 
 export async function GET(request: NextRequest) {
-  const adminSession = await requireAdminApiSession()
+  const adminSession = await requireAdminApiSession("dashboard:view")
   if ("response" in adminSession) {
     return adminSession.response
   }
@@ -14,6 +14,6 @@ export async function GET(request: NextRequest) {
     segment: request.nextUrl.searchParams.get("segment") ?? undefined,
   })
 
-  const data = await getAdminDashboardData(filters)
+  const data = await getAdminDashboardData(filters, adminSession.admin.role)
   return NextResponse.json(data)
 }

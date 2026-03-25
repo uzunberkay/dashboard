@@ -13,6 +13,7 @@ export default async function AdminLayout({
       currentAdmin={{
         name: admin.name,
         email: admin.email,
+        role: admin.role,
       }}
     >
       {children}

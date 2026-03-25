@@ -1,5 +1,6 @@
 import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
+import { hasAdminAccess } from "@/lib/admin/permissions"
 
 function isPublicPath(pathname: string) {
   return (
@@ -35,7 +36,7 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  if (pathname.startsWith("/admin") && token.role !== "ADMIN") {
+  if (pathname.startsWith("/admin") && !hasAdminAccess(token.role)) {
     return NextResponse.redirect(new URL("/", request.url))
   }
 

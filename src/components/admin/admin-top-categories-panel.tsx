@@ -8,7 +8,7 @@ interface AdminTopCategoriesPanelProps {
 }
 
 export function AdminTopCategoriesPanel({ items }: AdminTopCategoriesPanelProps) {
-  const maxValue = items[0]?.totalAmount ?? 1
+  const maxValue = Math.max(1, ...items.map((item) => item.totalAmount ?? 0))
 
   return (
     <Card className="rounded-[24px] border-border/70 bg-card/90">
@@ -24,21 +24,27 @@ export function AdminTopCategoriesPanel({ items }: AdminTopCategoriesPanelProps)
             Secili filtrede kategori hareketi bulunmuyor.
           </div>
         ) : (
-          items.map((item) => (
-            <div key={item.id} className="space-y-2">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold">{item.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {item.parentName ? `${item.parentName} | ` : ""}
-                    {item.transactionCount} islem
+          items.map((item) => {
+            const totalAmount = item.totalAmount ?? 0
+
+            return (
+              <div key={item.id} className="space-y-2">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold">{item.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {item.parentName ? `${item.parentName} | ` : ""}
+                      {item.transactionCount} islem
+                    </p>
+                  </div>
+                  <p className="text-sm font-semibold">
+                    {item.totalAmount === null ? "Gizli" : formatCurrency(totalAmount)}
                   </p>
                 </div>
-                <p className="text-sm font-semibold">{formatCurrency(item.totalAmount)}</p>
+                <Progress value={(totalAmount / maxValue) * 100} className="h-2.5" />
               </div>
-              <Progress value={(item.totalAmount / maxValue) * 100} className="h-2.5" />
-            </div>
-          ))
+            )
+          })
         )}
       </CardContent>
     </Card>

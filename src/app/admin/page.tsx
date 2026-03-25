@@ -15,6 +15,7 @@ import { AdminSavedViewsBar } from "@/components/admin/admin-saved-views-bar"
 import { AdminTopCategoriesPanel } from "@/components/admin/admin-top-categories-panel"
 import { AdminTrendChartPanel } from "@/components/admin/admin-trend-chart-panel"
 import { Button } from "@/components/ui/button"
+import { requireAdminPageSession } from "@/lib/admin/auth"
 import { getSingleSearchParam } from "@/lib/admin/query"
 import {
   getAdminDashboardData,
@@ -31,6 +32,7 @@ export default async function AdminDashboardPage({
 }: {
   searchParams: SearchParams
 }) {
+  const { admin } = await requireAdminPageSession("dashboard:view")
   const resolvedSearchParams = await searchParams
   const hasExplicitFilters = Boolean(
     getSingleSearchParam(resolvedSearchParams.range) || getSingleSearchParam(resolvedSearchParams.segment)
@@ -50,8 +52,8 @@ export default async function AdminDashboardPage({
   })
 
   const [data, savedViews] = await Promise.all([
-    getAdminDashboardData(filters),
-    getAdminSavedViews("DASHBOARD"),
+    getAdminDashboardData(filters, admin.role),
+    getAdminSavedViews("DASHBOARD", admin.role),
   ])
 
   const numberFormatter = new Intl.NumberFormat("tr-TR")
@@ -100,7 +102,7 @@ export default async function AdminDashboardPage({
               <option value="all">Tum kullanicilar</option>
               <option value="active">Aktif hesaplar</option>
               <option value="inactive">Pasif hesaplar</option>
-              <option value="admin">Yonetici hesaplari</option>
+              <option value="staff">Staff hesaplari</option>
             </select>
           </div>
 

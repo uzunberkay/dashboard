@@ -1,5 +1,4 @@
 import {
-  ActivityLogEvent,
   AdminSavedViewScope,
   Prisma,
   type ActivityLog,
@@ -8,8 +7,6 @@ import {
   type User,
 } from "@prisma/client"
 import { CACHE_TAGS } from "@/lib/cache-tags"
-import { getServerEnv } from "@/lib/env"
-import { getRecentErrors } from "@/lib/logger"
 import { prisma } from "@/lib/prisma"
 import { buildAdminSavedViewHref } from "@/lib/admin/query"
 import { getOrSetAdminRuntimeCache } from "@/lib/admin/runtime-cache"
@@ -19,6 +16,7 @@ import {
   mergeAdminSettingValues,
 } from "@/lib/admin/settings"
 import { formatAdminActivityEvent, formatAdminRole } from "@/lib/admin/labels"
+import { canAccessSavedViewScope } from "@/lib/admin/permissions"
 import type {
   AdminAnomalyCard,
   AdminActivityExplorerItem,
@@ -30,6 +28,7 @@ import type {
   AdminReportsData,
   AdminSavedViewSummary,
   AdminSettingValueMap,
+  AdminStaffRole,
   AdminSystemData,
   AdminTopCategory,
   AdminUserDetail,
@@ -99,8 +98,12 @@ function buildDashboardUserWhere(segment: AdminDashboardFilters["segment"]): Pri
       return { isActive: true }
     case "inactive":
       return { isActive: false }
-    case "admin":
-      return { role: "ADMIN" }
+    case "staff":
+      return {
+        role: {
+          not: "USER",
+        },
+      }
     default:
       return {}
   }
@@ -112,8 +115,8 @@ function buildUserSegmentSql(segment: AdminDashboardFilters["segment"], alias: s
       return Prisma.raw(`AND "${alias}"."isActive" = true`)
     case "inactive":
       return Prisma.raw(`AND "${alias}"."isActive" = false`)
-    case "admin":
-      return Prisma.raw(`AND "${alias}"."role" = 'ADMIN'`)
+    case "staff":
+      return Prisma.raw(`AND "${alias}"."role" <> 'USER'`)
     default:
       return Prisma.empty
   }
@@ -123,10 +126,15 @@ function getDateRangeFromFilter(range: AdminDashboardFilters["range"]) {
   return formatDayOffset(DASHBOARD_RANGE_TO_DAYS[range] - 1)
 }
 
-function describeActivity(activity: ActivityWithUsers) {
+function describeActivity(activity: ActivityWithUsers, options?: { anonymize?: boolean }) {
   const metadata = readMetadata(activity.metadata)
-  const actorName = activity.actorUser?.name || activity.actorUser?.email || "Sistem"
-  const targetName = activity.targetUser?.name || activity.targetUser?.email || actorName
+  const anonymize = options?.anonymize ?? false
+  const actorName = anonymize
+    ? "Bir admin"
+    : activity.actorUser?.name || activity.actorUser?.email || "Sistem"
+  const targetName = anonymize
+    ? "bir hesap"
+    : activity.targetUser?.name || activity.targetUser?.email || actorName
 
   switch (activity.event) {
     case "LOGIN":
@@ -137,7 +145,7 @@ function describeActivity(activity: ActivityWithUsers) {
       return `${actorName}, ${targetName} hesabini ${metadata?.nextStatus === "active" ? "aktif" : "pasif"} duruma getirdi`
     case "USER_ROLE_CHANGED":
       return `${actorName}, ${targetName} rolunu ${formatAdminRole(
-        metadata?.nextRole === "ADMIN" ? "ADMIN" : "USER"
+        typeof metadata?.nextRole === "string" ? (metadata.nextRole as Parameters<typeof formatAdminRole>[0]) : "USER"
       )} olarak degistirdi`
     case "BULK_USER_UPDATED":
       return `${actorName} toplu kullanici islemi baslatti`
@@ -151,14 +159,37 @@ function describeActivity(activity: ActivityWithUsers) {
       return `${actorName} kayitli gorunumu guncelledi`
     case "SAVED_VIEW_DELETED":
       return `${actorName} kayitli gorunumu sildi`
+    case "APPROVAL_REQUESTED":
+      return `${actorName} kritik bir islem icin onay istedi`
+    case "APPROVAL_APPROVED":
+      return `${actorName} bekleyen onay istegini uyguladi`
+    case "APPROVAL_REJECTED":
+      return `${actorName} bekleyen onay istegini reddetti`
+    case "USER_NOTE_CREATED":
+      return `${actorName}, ${targetName} icin internal not birakti`
+    case "USER_SESSIONS_REVOKED":
+      return `${actorName}, ${targetName} oturumlarini gecersiz kilidi`
+    case "RAW_EXPORT_REQUESTED":
+      return `${actorName}, ${targetName} icin ham export istedi`
+    case "RAW_EXPORT_DOWNLOADED":
+      return `${actorName}, ${targetName} ham exportunu indirdi`
+    case "FINANCE_REMINDER_JOB_SUCCEEDED":
+      return `${actorName} finance reminder job'unu basariyla calistirdi`
+    case "FINANCE_REMINDER_JOB_FAILED":
+      return `${actorName} finance reminder job'unda hata aldi`
     default:
       return `${actorName} ${formatAdminActivityEvent(activity.event)} islemi yapti`
   }
 }
 
-function serializeActivity(activity: ActivityWithUsers): AdminActivityItem {
-  const actorName = activity.actorUser?.name || activity.actorUser?.email || "Sistem"
-  const targetName = activity.targetUser?.name || activity.targetUser?.email || actorName
+function serializeActivity(activity: ActivityWithUsers, options?: { anonymize?: boolean }): AdminActivityItem {
+  const anonymize = options?.anonymize ?? false
+  const actorName = anonymize
+    ? "Maskeli actor"
+    : activity.actorUser?.name || activity.actorUser?.email || "Sistem"
+  const targetName = anonymize
+    ? "Maskeli target"
+    : activity.targetUser?.name || activity.targetUser?.email || actorName
 
   return {
     id: activity.id,
@@ -166,8 +197,8 @@ function serializeActivity(activity: ActivityWithUsers): AdminActivityItem {
     createdAt: activity.createdAt.toISOString(),
     actorName,
     targetName,
-    description: describeActivity(activity),
-    ipAddress: activity.ipAddress,
+    description: describeActivity(activity, { anonymize }),
+    ipAddress: anonymize ? null : activity.ipAddress,
   }
 }
 
@@ -232,8 +263,12 @@ function buildDashboardCacheKey(filters: AdminDashboardFilters) {
   return `${CACHE_TAGS.adminDashboard}:${filters.range}:${filters.segment}`
 }
 
-export async function getAdminDashboardData(filters: AdminDashboardFilters): Promise<AdminDashboardData> {
+export async function getAdminDashboardData(
+  filters: AdminDashboardFilters,
+  viewerRole?: AdminStaffRole
+): Promise<AdminDashboardData> {
   const settings = await getAdminSettingValues()
+  const anonymizeActivity = viewerRole === "ANALYST"
 
   return getOrSetAdminRuntimeCache(buildDashboardCacheKey(filters), settings.dashboardCacheTtlSec, async () => {
     const rangeStart = getDateRangeFromFilter(filters.range)
@@ -428,7 +463,7 @@ export async function getAdminDashboardData(filters: AdminDashboardFilters): Pro
       trend,
       topCategories,
       anomalies,
-      recentActivity: recentActivity.map(serializeActivity),
+      recentActivity: recentActivity.map((item) => serializeActivity(item, { anonymize: anonymizeActivity })),
     }
   })
 }
@@ -454,7 +489,11 @@ export async function getAdminUsersData(filters: AdminUsersFilters & { page: num
     ]
   }
 
-  if (filters.role === "ADMIN" || filters.role === "USER") {
+  if (filters.role === "staff") {
+    where.role = {
+      not: "USER",
+    }
+  } else if (filters.role !== "all") {
     where.role = filters.role
   }
 
@@ -529,285 +568,15 @@ export async function getAdminUsersData(filters: AdminUsersFilters & { page: num
 }
 
 export async function getAdminUserDetailData(userId: string): Promise<AdminUserDetail | null> {
-  const window30 = formatDayOffset(29)
-  const window90 = formatDayOffset(89)
+  const { getAdminUserDetailData: getRoleAwareAdminUserDetailData } = await import("@/lib/admin/user-detail")
 
-  const [
-    user,
-    totalsByType,
-    goalCount,
-    categoryCount,
-    recentTransactions,
-    groupedCategories,
-    recentActivity,
-    recentAdminChanges,
-    window30Aggregate,
-    window90Aggregate,
-    window30ByType,
-    window90ByType,
-  ] = await Promise.all([
-    prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        lastLoginAt: true,
-        _count: {
-          select: {
-            transactions: true,
-          },
-        },
-      },
-    }),
-    prisma.transaction.groupBy({
-      by: ["type"],
-      where: { userId },
-      _sum: { amount: true },
-    }),
-    prisma.goal.count({
-      where: { userId },
-    }),
-    prisma.category.count({
-      where: { userId },
-    }),
-    prisma.transaction.findMany({
-      where: { userId },
-      take: 10,
-      orderBy: { date: "desc" },
-      include: {
-        category: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    }),
-    prisma.transaction.groupBy({
-      by: ["categoryId"],
-      where: {
-        userId,
-        type: "EXPENSE",
-        categoryId: { not: null },
-      },
-      _sum: {
-        amount: true,
-      },
-      _count: {
-        _all: true,
-      },
-    }),
-    prisma.activityLog.findMany({
-      where: {
-        OR: [{ actorUserId: userId }, { targetUserId: userId }],
-      },
-      take: 8,
-      orderBy: { createdAt: "desc" },
-      include: {
-        actorUser: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        targetUser: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-    }),
-    prisma.activityLog.findMany({
-      where: {
-        targetUserId: userId,
-        event: {
-          in: [
-            ActivityLogEvent.USER_STATUS_CHANGED,
-            ActivityLogEvent.USER_ROLE_CHANGED,
-            ActivityLogEvent.BULK_USER_UPDATED,
-          ],
-        },
-      },
-      take: 6,
-      orderBy: { createdAt: "desc" },
-      include: {
-        actorUser: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        targetUser: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-    }),
-    prisma.transaction.aggregate({
-      where: {
-        userId,
-        date: {
-          gte: window30,
-        },
-      },
-      _count: {
-        _all: true,
-      },
-      _sum: {
-        amount: true,
-      },
-    }),
-    prisma.transaction.aggregate({
-      where: {
-        userId,
-        date: {
-          gte: window90,
-        },
-      },
-      _count: {
-        _all: true,
-      },
-      _sum: {
-        amount: true,
-      },
-    }),
-    prisma.transaction.groupBy({
-      by: ["type"],
-      where: {
-        userId,
-        date: {
-          gte: window30,
-        },
-      },
-      _sum: {
-        amount: true,
-      },
-    }),
-    prisma.transaction.groupBy({
-      by: ["type"],
-      where: {
-        userId,
-        date: {
-          gte: window90,
-        },
-      },
-      _sum: {
-        amount: true,
-      },
-    }),
-  ])
-
-  if (!user) {
-    return null
-  }
-
-  const categoryIds = groupedCategories
-    .map((item) => item.categoryId)
-    .filter((item): item is string => Boolean(item))
-
-  const categories = categoryIds.length
-    ? await prisma.category.findMany({
-        where: {
-          id: {
-            in: categoryIds,
-          },
-        },
-        select: {
-          id: true,
-          name: true,
-          parent: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      })
-    : []
-
-  const categoryMap = new Map(categories.map((category) => [category.id, category]))
-  const topCategories = groupedCategories
-    .map((item) => {
-      if (!item.categoryId) {
-        return null
-      }
-
-      const category = categoryMap.get(item.categoryId)
-      if (!category) {
-        return null
-      }
-
-      return {
-        id: item.categoryId,
-        name: category.name,
-        parentName: category.parent?.name ?? null,
-        totalAmount: item._sum.amount ?? 0,
-        transactionCount: item._count._all,
-      }
-    })
-    .filter((item): item is NonNullable<typeof item> => Boolean(item))
-    .sort((left, right) => right.totalAmount - left.totalAmount)
-    .slice(0, 5)
-
-  const income = totalsByType.find((item) => item.type === "INCOME")?._sum.amount ?? 0
-  const expense = totalsByType.find((item) => item.type === "EXPENSE")?._sum.amount ?? 0
-  const income30 = window30ByType.find((item) => item.type === "INCOME")?._sum.amount ?? 0
-  const expense30 = window30ByType.find((item) => item.type === "EXPENSE")?._sum.amount ?? 0
-  const income90 = window90ByType.find((item) => item.type === "INCOME")?._sum.amount ?? 0
-  const expense90 = window90ByType.find((item) => item.type === "EXPENSE")?._sum.amount ?? 0
-
-  return {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      isActive: user.isActive,
-      createdAt: user.createdAt.toISOString(),
-      lastLoginAt: user.lastLoginAt?.toISOString() ?? null,
+  return getRoleAwareAdminUserDetailData({
+    userId,
+    viewer: {
+      id: "system",
+      role: "SUPER_ADMIN",
     },
-    stats: {
-      totalTransactions: user._count.transactions,
-      totalIncome: income,
-      totalExpense: expense,
-      goalCount,
-      categoryCount,
-    },
-    windows: [
-      {
-        days: 30,
-        transactionCount: window30Aggregate._count._all,
-        totalIncome: income30,
-        totalExpense: expense30,
-      },
-      {
-        days: 90,
-        transactionCount: window90Aggregate._count._all,
-        totalIncome: income90,
-        totalExpense: expense90,
-      },
-    ],
-    recentTransactions: recentTransactions.map((transaction) => ({
-      id: transaction.id,
-      type: transaction.type,
-      amount: transaction.amount,
-      description: transaction.description,
-      date: transaction.date.toISOString(),
-      categoryName: transaction.category?.name ?? null,
-    })),
-    topCategories,
-    recentActivity: recentActivity.map(serializeActivity),
-    recentAdminChanges: recentAdminChanges.map(serializeActivityExplorer),
-  }
+  })
 }
 
 function buildActivityWhere(filters: AdminActivityFilters): Prisma.ActivityLogWhereInput {
@@ -1034,7 +803,7 @@ export async function getAdminActivityExportRows(filters: AdminActivityFilters) 
   }
 }
 
-export async function getAdminSavedViews(scope?: AdminSavedViewScope) {
+export async function getAdminSavedViews(scope?: AdminSavedViewScope, viewerRole?: AdminStaffRole) {
   const items = await prisma.adminSavedView.findMany({
     where: scope ? { scope } : undefined,
     orderBy: [
@@ -1052,10 +821,16 @@ export async function getAdminSavedViews(scope?: AdminSavedViewScope) {
     },
   })
 
-  return items.map((item) => serializeSavedView(item as SavedViewWithUser))
+  return items
+    .map((item) => serializeSavedView(item as SavedViewWithUser))
+    .filter((item) => (viewerRole ? canAccessSavedViewScope(viewerRole, item.scope) : true))
 }
 
-export async function getAdminDefaultSavedView(scope: AdminSavedViewScope) {
+export async function getAdminDefaultSavedView(scope: AdminSavedViewScope, viewerRole?: AdminStaffRole) {
+  if (viewerRole && !canAccessSavedViewScope(viewerRole, scope)) {
+    return null
+  }
+
   const item = await prisma.adminSavedView.findFirst({
     where: {
       scope,
@@ -1077,56 +852,40 @@ export async function getAdminDefaultSavedView(scope: AdminSavedViewScope) {
   return item ? serializeSavedView(item as SavedViewWithUser) : null
 }
 
-export async function getAdminReportsData(): Promise<AdminReportsData> {
+export async function getAdminReportsData(viewerRole?: AdminStaffRole): Promise<AdminReportsData> {
   return {
-    items: await getAdminSavedViews(),
+    items: await getAdminSavedViews(undefined, viewerRole),
   }
 }
 
 export async function getAdminSystemData(): Promise<AdminSystemData> {
-  const settings = await getAdminSettingValues()
-
-  return getOrSetAdminRuntimeCache(CACHE_TAGS.adminSystem, settings.systemCacheTtlSec, async () => {
-    const env = getServerEnv()
-    const dbResponseTimeMs = await measureDbResponseTimeMs()
-    const recentErrors = getRecentErrors(8)
-    const apiStatus = recentErrors.length > 0 || dbResponseTimeMs > settings.dbDegradedThresholdMs ? "degraded" : "healthy"
-    const databaseStatus = dbResponseTimeMs > settings.dbDegradedThresholdMs ? "degraded" : "healthy"
-
-    return {
-      environment: env.APP_ENV,
-      apiStatus,
-      databaseStatus,
-      dbResponseTimeMs,
-      generatedAt: new Date().toISOString(),
-      policies: {
-        activityRetentionDays: settings.activityRetentionDays,
-        exportMaxRows: settings.exportMaxRows,
-        dbDegradedThresholdMs: settings.dbDegradedThresholdMs,
-        dashboardCacheTtlSec: settings.dashboardCacheTtlSec,
-        systemCacheTtlSec: settings.systemCacheTtlSec,
-      },
-      recentErrors: recentErrors.map((error) => ({
-        message: error.message,
-        timestamp: error.timestamp,
-        meta: error.meta,
-      })),
-    }
-  })
+  const { getAdminSystemHealthData } = await import("@/lib/admin/system-data")
+  return getAdminSystemHealthData()
 }
 
 export async function getAdminSettingsData(currentAdmin: {
   name: string
   email: string
+  role: AdminStaffRole
 }) {
-  const [adminCount, inactiveUsers, savedViews, values] = await Promise.all([
+  const [staffCount, superAdminCount, inactiveUsers, savedViews, pendingApprovals, values] = await Promise.all([
     prisma.user.count({
-      where: { role: "ADMIN" },
+      where: {
+        role: {
+          not: "USER",
+        },
+      },
+    }),
+    prisma.user.count({
+      where: { role: "SUPER_ADMIN" },
     }),
     prisma.user.count({
       where: { isActive: false },
     }),
     prisma.adminSavedView.count(),
+    prisma.adminApprovalRequest.count({
+      where: { status: "PENDING" },
+    }),
     getAdminSettingValues(),
   ])
 
@@ -1134,13 +893,16 @@ export async function getAdminSettingsData(currentAdmin: {
     currentAdmin,
     security: {
       sessionStrategy: "NextAuth JWT oturumu",
-      roleGuard: "Proxy + server layout + API rol kontrolleri",
+      roleGuard: "Proxy + server layout + API permission kontrolleri",
       loginRateLimit: "Pencereli giris deneme siniri",
+      approvalFlow: "Kritik islemler ikinci admin onayi ile uygulanir",
     },
     governance: {
-      adminCount,
+      staffCount,
+      superAdminCount,
       inactiveUsers,
       savedViews,
+      pendingApprovals,
     },
     values,
     definitions: ADMIN_SETTING_DEFINITIONS,

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   Activity,
+  CheckCheck,
   Files,
   LayoutDashboard,
   PanelLeftClose,
@@ -14,24 +15,34 @@ import {
   WalletCards,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { hasPermission } from "@/lib/admin/permissions"
 import { cn } from "@/lib/utils"
+import type { AdminPermission, AdminStaffRole } from "@/types/admin"
 
 const navigation = [
-  { name: "Genel bakis", href: "/admin", icon: LayoutDashboard },
-  { name: "Kullanicilar", href: "/admin/users", icon: Users },
-  { name: "Aktivite", href: "/admin/activity", icon: Activity },
-  { name: "Raporlar", href: "/admin/reports", icon: Files },
-  { name: "Sistem", href: "/admin/system", icon: ServerCog },
-  { name: "Ayarlar", href: "/admin/settings", icon: Settings },
-]
+  { name: "Genel bakis", href: "/admin", icon: LayoutDashboard, permission: "dashboard:view" },
+  { name: "Kullanicilar", href: "/admin/users", icon: Users, permission: "users:view" },
+  { name: "Aktivite", href: "/admin/activity", icon: Activity, permission: "activity:view" },
+  { name: "Raporlar", href: "/admin/reports", icon: Files, permission: "reports:view" },
+  { name: "Onay kuyrugu", href: "/admin/approvals", icon: CheckCheck, permission: "approvals:view" },
+  { name: "Sistem", href: "/admin/system", icon: ServerCog, permission: "system:view" },
+  { name: "Ayarlar", href: "/admin/settings", icon: Settings, permission: "settings:view" },
+] satisfies Array<{
+  name: string
+  href: string
+  icon: typeof LayoutDashboard
+  permission: AdminPermission
+}>
 
 interface AdminSidebarProps {
+  role: AdminStaffRole
   open: boolean
   onClose: () => void
 }
 
-export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
+export function AdminSidebar({ role, open, onClose }: AdminSidebarProps) {
   const pathname = usePathname()
+  const visibleNavigation = navigation.filter((item) => hasPermission(role, item.permission))
 
   return (
     <>
@@ -86,7 +97,7 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         </div>
 
         <nav className="flex-1 space-y-1 px-4 py-5">
-          {navigation.map((item) => {
+          {visibleNavigation.map((item) => {
             const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href))
 
             return (

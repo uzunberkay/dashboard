@@ -10,7 +10,10 @@ datasource db {
 
 enum UserRole {
   USER
-  ADMIN
+  SUPPORT
+  ANALYST
+  OPS_ADMIN
+  SUPER_ADMIN
 }
 
 enum ActivityLogEvent {
@@ -24,6 +27,15 @@ enum ActivityLogEvent {
   SAVED_VIEW_CREATED
   SAVED_VIEW_UPDATED
   SAVED_VIEW_DELETED
+  APPROVAL_REQUESTED
+  APPROVAL_APPROVED
+  APPROVAL_REJECTED
+  USER_NOTE_CREATED
+  USER_SESSIONS_REVOKED
+  RAW_EXPORT_REQUESTED
+  RAW_EXPORT_DOWNLOADED
+  FINANCE_REMINDER_JOB_SUCCEEDED
+  FINANCE_REMINDER_JOB_FAILED
 }
 
 enum AdminSettingKey {
@@ -39,6 +51,20 @@ enum AdminSavedViewScope {
   DASHBOARD
   ACTIVITY
   USERS
+}
+
+enum AdminApprovalActionType {
+  USER_ACCOUNT_UPDATE
+  BULK_USER_ACCOUNT_UPDATE
+  ADMIN_SETTINGS_UPDATE
+  RAW_USER_EXPORT
+}
+
+enum AdminApprovalRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
 }
 
 enum RecurringFrequency {
@@ -71,43 +97,49 @@ enum ReminderStatus {
 }
 
 model User {
-  id                    String           @id @default(cuid())
-  email                 String           @unique
-  password              String
-  name                  String
-  role                  UserRole         @default(USER)
-  isActive              Boolean          @default(true)
-  lastLoginAt           DateTime?
-  createdAt             DateTime         @default(now())
-  transactions          Transaction[]
-  categories            Category[]
-  goals                 Goal[]
-  activityLogsAuthored  ActivityLog[]    @relation("ActivityActor")
-  activityLogsTargeted  ActivityLog[]    @relation("ActivityTarget")
-  adminSettingsUpdated  AdminSetting[]   @relation("AdminSettingUpdatedBy")
-  adminSavedViewsCreated AdminSavedView[] @relation("AdminSavedViewCreatedBy")
-  recurringRules        RecurringRule[]
-  scheduledPayments     ScheduledPayment[]
-  reminders             Reminder[]
-  notificationPreference NotificationPreference?
-  monthlyReports        MonthlyReport[]
+  id                       String                  @id @default(cuid())
+  email                    String                  @unique
+  password                 String
+  name                     String
+  role                     UserRole                @default(USER)
+  isActive                 Boolean                 @default(true)
+  sessionVersion           Int                     @default(0)
+  lastLoginAt              DateTime?
+  createdAt                DateTime                @default(now())
+  transactions             Transaction[]
+  categories               Category[]
+  goals                    Goal[]
+  activityLogsAuthored     ActivityLog[]           @relation("ActivityActor")
+  activityLogsTargeted     ActivityLog[]           @relation("ActivityTarget")
+  adminSettingsUpdated     AdminSetting[]          @relation("AdminSettingUpdatedBy")
+  adminSavedViewsCreated   AdminSavedView[]        @relation("AdminSavedViewCreatedBy")
+  approvalRequestsCreated  AdminApprovalRequest[]  @relation("AdminApprovalRequester")
+  approvalRequestsApproved AdminApprovalRequest[]  @relation("AdminApprovalApprover")
+  approvalRequestsTargeted AdminApprovalRequest[]  @relation("AdminApprovalTarget")
+  adminNotesAuthored       AdminUserNote[]         @relation("AdminUserNoteAuthor")
+  adminNotesReceived       AdminUserNote[]         @relation("AdminUserNoteTarget")
+  recurringRules           RecurringRule[]
+  scheduledPayments        ScheduledPayment[]
+  reminders                Reminder[]
+  notificationPreference   NotificationPreference?
+  monthlyReports           MonthlyReport[]
 }
 
 model Category {
-  id           String        @id @default(cuid())
-  name         String
-  icon         String?
-  budgetLimit  Float?
-  sortOrder    Int           @default(0)
-  isSystem     Boolean       @default(false)
-  parentId     String?
-  parent       Category?     @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
-  children     Category[]    @relation("CategoryHierarchy")
-  userId       String
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions Transaction[]
-  goals        Goal[]
-  recurringRules RecurringRule[]
+  id                String             @id @default(cuid())
+  name              String
+  icon              String?
+  budgetLimit       Float?
+  sortOrder         Int                @default(0)
+  isSystem          Boolean            @default(false)
+  parentId          String?
+  parent            Category?          @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children          Category[]         @relation("CategoryHierarchy")
+  userId            String
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions      Transaction[]
+  goals             Goal[]
+  recurringRules    RecurringRule[]
   scheduledPayments ScheduledPayment[]
 
   @@unique([name, userId, parentId])
@@ -115,16 +147,16 @@ model Category {
 }
 
 model Transaction {
-  id          String    @id @default(cuid())
-  type        String
-  amount      Float
-  description String?
-  date        DateTime
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now())
+  id               String            @id @default(cuid())
+  type             String
+  amount           Float
+  description      String?
+  date             DateTime
+  categoryId       String?
+  category         Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  userId           String
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime          @default(now())
   scheduledPayment ScheduledPayment? @relation("ScheduledPaymentTransaction")
 
   @@index([userId, date])
@@ -133,30 +165,30 @@ model Transaction {
 }
 
 model Goal {
-  id           String    @id @default(cuid())
-  userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Goal scope: overall balance or category-specific.
-  scope        String    // "OVERALL" | "CATEGORY"
+  scope String // "OVERALL" | "CATEGORY"
 
   // Goal period: monthly or yearly.
-  period       String    // "MONTHLY" | "YEARLY"
+  period String // "MONTHLY" | "YEARLY"
 
   // Category reference for category-scoped goals.
-  categoryId   String?
-  category     Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   // Goal direction: save or cap spending.
-  direction    String    // "SAVE" | "SPEND_MAX"
+  direction    String // "SAVE" | "SPEND_MAX"
   targetAmount Float
 
   // Applicable time range.
-  year         Int
-  month        Int?
+  year  Int
+  month Int?
 
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId, year, month, scope, period])
 }
@@ -188,66 +220,105 @@ model AdminSetting {
 }
 
 model AdminSavedView {
-  id              String             @id @default(cuid())
+  id              String              @id @default(cuid())
   scope           AdminSavedViewScope
   name            String
   filtersJson     Json
-  isDefault       Boolean            @default(false)
+  isDefault       Boolean             @default(false)
   createdByUserId String?
-  createdByUser   User?              @relation("AdminSavedViewCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  createdByUser   User?               @relation("AdminSavedViewCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
 
   @@index([scope, isDefault, updatedAt])
   @@index([createdByUserId, scope])
 }
 
+model AdminApprovalRequest {
+  id                   String                     @id @default(cuid())
+  actionType           AdminApprovalActionType
+  status               AdminApprovalRequestStatus @default(PENDING)
+  payloadJson          Json
+  reason               String?
+  targetUserId         String?
+  targetUser           User?                      @relation("AdminApprovalTarget", fields: [targetUserId], references: [id], onDelete: SetNull)
+  requestedByUserId    String
+  requestedByUser      User                       @relation("AdminApprovalRequester", fields: [requestedByUserId], references: [id], onDelete: Cascade)
+  approvedByUserId     String?
+  approvedByUser       User?                      @relation("AdminApprovalApprover", fields: [approvedByUserId], references: [id], onDelete: SetNull)
+  rejectionReason      String?
+  expiresAt            DateTime
+  createdAt            DateTime                   @default(now())
+  decidedAt            DateTime?
+  fulfillmentToken     String?                    @unique
+  fulfillmentExpiresAt DateTime?
+  fulfilledAt          DateTime?
+
+  @@index([status, expiresAt, createdAt])
+  @@index([requestedByUserId, status, createdAt])
+  @@index([targetUserId, createdAt])
+}
+
+model AdminUserNote {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation("AdminUserNoteTarget", fields: [userId], references: [id], onDelete: Cascade)
+  authorUserId String
+  authorUser   User     @relation("AdminUserNoteAuthor", fields: [authorUserId], references: [id], onDelete: Cascade)
+  body         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([authorUserId, createdAt])
+}
+
 model RecurringRule {
-  id               String            @id @default(cuid())
-  name             String
-  type             String
-  amount           Float
-  description      String?
-  frequency        RecurringFrequency
-  customMonthDay   Int?
-  startsAt         DateTime
-  endsAt           DateTime?
-  isActive         Boolean           @default(true)
-  isSubscription   Boolean           @default(false)
-  reminderDaysBefore Int             @default(3)
-  categoryId       String?
-  category         Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  userId           String
-  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  scheduledPayments ScheduledPayment[]
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  id                 String             @id @default(cuid())
+  name               String
+  type               String
+  amount             Float
+  description        String?
+  frequency          RecurringFrequency
+  customMonthDay     Int?
+  startsAt           DateTime
+  endsAt             DateTime?
+  isActive           Boolean            @default(true)
+  isSubscription     Boolean            @default(false)
+  reminderDaysBefore Int                @default(3)
+  categoryId         String?
+  category           Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  userId             String
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scheduledPayments  ScheduledPayment[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
 
   @@index([userId, isActive, frequency])
   @@index([categoryId, isSubscription])
 }
 
 model ScheduledPayment {
-  id               String                 @id @default(cuid())
-  name             String
-  type             String
-  amount           Float
-  description      String?
-  dueDate          DateTime
-  status           ScheduledPaymentStatus @default(PENDING)
-  source           String                 @default("RECURRING")
-  paidAt           DateTime?
-  categoryId       String?
-  category         Category?              @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  recurringRuleId  String?
-  recurringRule    RecurringRule?         @relation(fields: [recurringRuleId], references: [id], onDelete: SetNull)
-  transactionId    String?                @unique
-  transaction      Transaction?           @relation("ScheduledPaymentTransaction", fields: [transactionId], references: [id], onDelete: SetNull)
-  userId           String
-  user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  reminders        Reminder[]
-  createdAt        DateTime               @default(now())
-  updatedAt        DateTime               @updatedAt
+  id              String                 @id @default(cuid())
+  name            String
+  type            String
+  amount          Float
+  description     String?
+  dueDate         DateTime
+  status          ScheduledPaymentStatus @default(PENDING)
+  source          String                 @default("RECURRING")
+  paidAt          DateTime?
+  categoryId      String?
+  category        Category?              @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  recurringRuleId String?
+  recurringRule   RecurringRule?         @relation(fields: [recurringRuleId], references: [id], onDelete: SetNull)
+  transactionId   String?                @unique
+  transaction     Transaction?           @relation("ScheduledPaymentTransaction", fields: [transactionId], references: [id], onDelete: SetNull)
+  userId          String
+  user            User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminders       Reminder[]
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
 
   @@index([userId, dueDate, status])
   @@index([categoryId, dueDate])
@@ -255,21 +326,21 @@ model ScheduledPayment {
 }
 
 model Reminder {
-  id               String           @id @default(cuid())
-  type             ReminderType
-  channel          ReminderChannel
-  status           ReminderStatus   @default(PENDING)
-  sendAt           DateTime
-  sentAt           DateTime?
-  lastError        String?
+  id                 String            @id @default(cuid())
+  type               ReminderType
+  channel            ReminderChannel
+  status             ReminderStatus    @default(PENDING)
+  sendAt             DateTime
+  sentAt             DateTime?
+  lastError          String?
   scheduledPaymentId String?
-  scheduledPayment ScheduledPayment? @relation(fields: [scheduledPaymentId], references: [id], onDelete: Cascade)
-  monthlyReportId  String?
-  monthlyReport    MonthlyReport?   @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
-  userId           String
-  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  scheduledPayment   ScheduledPayment? @relation(fields: [scheduledPaymentId], references: [id], onDelete: Cascade)
+  monthlyReportId    String?
+  monthlyReport      MonthlyReport?    @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
+  userId             String
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
 
   @@index([userId, channel, status, sendAt])
   @@index([scheduledPaymentId, channel, type])
@@ -277,29 +348,29 @@ model Reminder {
 }
 
 model NotificationPreference {
-  userId            String   @id
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  emailReminders    Boolean  @default(true)
-  emailMonthlyDigest Boolean @default(true)
-  reminderLeadDays  Int      @default(3)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  userId             String   @id
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emailReminders     Boolean  @default(true)
+  emailMonthlyDigest Boolean  @default(true)
+  reminderLeadDays   Int      @default(3)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model MonthlyReport {
-  id               String     @id @default(cuid())
-  title            String
-  summaryText      String
-  metricsJson      Json
-  highlightsJson   Json?
-  emailSentAt      DateTime?
-  year             Int
-  month            Int
-  userId           String
-  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  reminders        Reminder[]
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  id             String     @id @default(cuid())
+  title          String
+  summaryText    String
+  metricsJson    Json
+  highlightsJson Json?
+  emailSentAt    DateTime?
+  year           Int
+  month          Int
+  userId         String
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminders      Reminder[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
   @@unique([userId, year, month])
   @@index([userId, createdAt])

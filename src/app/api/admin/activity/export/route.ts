@@ -16,7 +16,7 @@ function escapeCsvCell(value: string | number | null | undefined) {
 }
 
 export async function GET(request: NextRequest) {
-  const adminSession = await requireAdminApiSession()
+  const adminSession = await requireAdminApiSession("reports:export:activity")
   if ("response" in adminSession) {
     return adminSession.response
   }

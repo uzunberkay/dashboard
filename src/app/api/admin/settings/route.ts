@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdminApiSession } from "@/lib/admin/auth"
 import { getAdminSettingsData } from "@/lib/admin/data"
-import { updateAdminSettings } from "@/lib/admin/mutations"
+import { requestAdminSettingsUpdate } from "@/lib/admin/mutations"
 import { getClientIp, getUserAgent } from "@/lib/request"
 import { adminSettingsUpdateSchema } from "@/lib/validations"
 
 export async function GET() {
-  const adminSession = await requireAdminApiSession()
+  const adminSession = await requireAdminApiSession("settings:view")
   if ("response" in adminSession) {
     return adminSession.response
   }
@@ -14,34 +14,47 @@ export async function GET() {
   const data = await getAdminSettingsData({
     name: adminSession.admin.name,
     email: adminSession.admin.email,
+    role: adminSession.admin.role,
   })
 
   return NextResponse.json(data)
 }
 
 export async function PATCH(request: NextRequest) {
-  const adminSession = await requireAdminApiSession()
+  const adminSession = await requireAdminApiSession("settings:request:update")
   if ("response" in adminSession) {
     return adminSession.response
   }
 
   try {
     const body = await request.json()
-    const values = adminSettingsUpdateSchema.parse(body)
+    const { reason, ...values } = adminSettingsUpdateSchema.parse(body)
 
-    await updateAdminSettings({
-      actorUserId: adminSession.admin.id,
+    const result = await requestAdminSettingsUpdate({
+      actor: {
+        id: adminSession.admin.id,
+        role: adminSession.admin.role,
+      },
       values,
+      reason,
       ipAddress: getClientIp(request),
       userAgent: getUserAgent(request),
     })
 
+    if (!result.ok) {
+      return NextResponse.json({ error: result.message }, { status: 400 })
+    }
+
     const data = await getAdminSettingsData({
       name: adminSession.admin.name,
       email: adminSession.admin.email,
+      role: adminSession.admin.role,
     })
 
-    return NextResponse.json(data)
+    return NextResponse.json({
+      ...data,
+      mutation: result,
+    })
   } catch (error) {
     const message = error instanceof Error ? error.message : "Gecersiz ayar verisi"
     return NextResponse.json({ error: message }, { status: 400 })

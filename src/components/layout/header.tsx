@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { signOut, useSession } from "next-auth/react"
 import { LogOut, Menu, Shield, User } from "lucide-react"
+import { hasAdminAccess } from "@/lib/admin/permissions"
 import { ThemeToggle } from "@/components/theme/theme-toggle"
 import { Button } from "@/components/ui/button"
 import {
@@ -59,7 +60,7 @@ export function Header({ onMenuClick }: HeaderProps) {
               <p className="text-xs text-muted-foreground">{session?.user?.email}</p>
             </div>
           </DropdownMenuLabel>
-          {session?.user?.role === "ADMIN" && (
+          {hasAdminAccess(session?.user?.role) && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>

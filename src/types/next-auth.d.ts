@@ -1,9 +1,11 @@
 import "next-auth"
+import type { AdminUserRole } from "@/types/admin"
 
 declare module "next-auth" {
   interface User {
-    role: "USER" | "ADMIN"
+    role: AdminUserRole
     isActive: boolean
+    sessionVersion: number
   }
 
   interface Session {
@@ -11,8 +13,9 @@ declare module "next-auth" {
       id: string
       name: string | null
       email: string | null
-      role: "USER" | "ADMIN"
+      role: AdminUserRole
       isActive: boolean
+      sessionVersion: number
     }
   }
 }
@@ -20,7 +23,8 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     id?: string
-    role?: "USER" | "ADMIN"
+    role?: AdminUserRole
     isActive?: boolean
+    sessionVersion?: number
   }
 }

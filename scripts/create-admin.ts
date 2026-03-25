@@ -14,14 +14,14 @@ async function main() {
     update: {
       name,
       password: hashedPassword,
-      role: "ADMIN",
+      role: "SUPER_ADMIN",
       isActive: true,
     },
     create: {
       name,
       email,
       password: hashedPassword,
-      role: "ADMIN",
+      role: "SUPER_ADMIN",
       isActive: true,
     },
     select: {

@@ -1,12 +1,16 @@
-import { Activity, AlertTriangle, DatabaseZap, ServerCog } from "lucide-react"
+import { Activity, CheckCheck, DatabaseZap, ServerCog } from "lucide-react"
+import { AdminFinanceReminderJobPanel } from "@/components/admin/admin-finance-reminder-job-panel"
 import { AdminPageHeader } from "@/components/admin/admin-page-header"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { getAdminSystemData } from "@/lib/admin/data"
+import { requireAdminPageSession } from "@/lib/admin/auth"
+import { hasPermission } from "@/lib/admin/permissions"
+import { getAdminSystemHealthData } from "@/lib/admin/system-data"
 import { formatDateTime } from "@/lib/utils"
 
 export default async function AdminSystemPage() {
-  const data = await getAdminSystemData()
+  const { admin } = await requireAdminPageSession("system:view")
+  const data = await getAdminSystemHealthData()
   const environmentLabel =
     {
       production: "uretim",
@@ -57,6 +61,21 @@ export default async function AdminSystemPage() {
 
         <Card className="rounded-[24px] border-border/70 bg-card/90">
           <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-muted-foreground">Bekleyen onaylar</CardTitle>
+          </CardHeader>
+          <CardContent className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-3xl font-semibold">{data.approvals.pendingCount}</p>
+              <p className="text-sm text-muted-foreground">
+                Hassas bekleyen: {data.approvals.sensitivePendingCount}
+              </p>
+            </div>
+            <CheckCheck className="h-5 w-5 text-primary" />
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-[24px] border-border/70 bg-card/90">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground">DB yanit suresi</CardTitle>
           </CardHeader>
           <CardContent className="flex items-end justify-between gap-4">
@@ -65,19 +84,6 @@ export default async function AdminSystemPage() {
               <p className="text-sm text-muted-foreground">Son sunucu tarafli kontrol sonucu.</p>
             </div>
             <Activity className="h-5 w-5 text-primary" />
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-[24px] border-border/70 bg-card/90">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">Yakalanan hatalar</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-3xl font-semibold">{data.recentErrors.length}</p>
-              <p className="text-sm text-muted-foreground">Bellekte tutulan son hata goruntuleri.</p>
-            </div>
-            <AlertTriangle className="h-5 w-5 text-amber-500" />
           </CardContent>
         </Card>
       </div>
@@ -104,6 +110,34 @@ export default async function AdminSystemPage() {
             <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">System cache</p>
               <p className="mt-2 text-lg font-semibold">{data.policies.systemCacheTtlSec}s</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <AdminFinanceReminderJobPanel
+          job={data.financeReminderJob}
+          canRunJob={hasPermission(admin.role, "system:jobs:run")}
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+        <Card className="rounded-[24px] border-border/70 bg-card/90">
+          <CardHeader className="space-y-2">
+            <CardTitle>Approval metrikleri</CardTitle>
+            <p className="text-sm text-muted-foreground">Pending, sensitive ve expired dagilimini izleyin.</p>
+          </CardHeader>
+          <CardContent className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Pending</p>
+              <p className="mt-2 text-lg font-semibold">{data.approvals.pendingCount}</p>
+            </div>
+            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Sensitive</p>
+              <p className="mt-2 text-lg font-semibold">{data.approvals.sensitivePendingCount}</p>
+            </div>
+            <div className="rounded-[22px] border border-border/70 bg-background/70 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Expired</p>
+              <p className="mt-2 text-lg font-semibold">{data.approvals.expiredCount}</p>
             </div>
           </CardContent>
         </Card>

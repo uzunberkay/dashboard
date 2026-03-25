@@ -21,9 +21,17 @@ import type { AdminUserListItem } from "@/types/admin"
 
 interface AdminUsersTableProps {
   users: AdminUserListItem[]
+  canBulkUpdate: boolean
 }
 
-export function AdminUsersTable({ users }: AdminUsersTableProps) {
+type BulkMutationResponse = {
+  ok?: boolean
+  mode?: "approval_requested" | "completed"
+  message?: string
+  error?: string
+}
+
+export function AdminUsersTable({ users, canBulkUpdate }: AdminUsersTableProps) {
   const router = useRouter()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [previewUser, setPreviewUser] = useState<AdminUserListItem | null>(null)
@@ -44,11 +52,29 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
     setSelectedIds(allSelected ? [] : users.map((user) => user.id))
   }
 
-  function runBulkAction(action: "enable" | "disable" | "promoteAdmin" | "demoteUser") {
+  function runBulkAction(action: "enable" | "disable") {
+    if (!canBulkUpdate) {
+      return
+    }
+
     if (selectedIds.length === 0) {
       toast({
         title: "Kullanici secilmedi",
         description: "Toplu islem oncesinde en az bir kullanici secin.",
+        variant: "warning",
+      })
+      return
+    }
+
+    const reason = window.prompt("Bu toplu islem icin kisa bir onay notu girin.")
+    if (reason === null) {
+      return
+    }
+
+    if (reason.trim().length < 3) {
+      toast({
+        title: "Onay notu gerekli",
+        description: "Lutfen en az 3 karakterlik bir gerekce girin.",
         variant: "warning",
       })
       return
@@ -61,10 +87,11 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
         body: JSON.stringify({
           userIds: selectedIds,
           action,
+          reason: reason.trim(),
         }),
       })
 
-      const payload = (await response.json()) as { updated?: number; skipped?: string[]; error?: string }
+      const payload = (await response.json()) as BulkMutationResponse
       if (!response.ok) {
         toast({
           title: "Toplu islem basarisiz",
@@ -75,11 +102,8 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
       }
 
       toast({
-        title: "Toplu islem tamamlandi",
-        description:
-          payload.skipped && payload.skipped.length > 0
-            ? `${payload.updated ?? 0} kullanici guncellendi, ${payload.skipped.length} kayit atlandi.`
-            : `${payload.updated ?? 0} kullanici basariyla guncellendi.`,
+        title: payload.mode === "approval_requested" ? "Onay istegi olusturuldu" : "Toplu islem tamamlandi",
+        description: payload.message ?? "Toplu islem sonuclandi.",
         variant: "success",
       })
 
@@ -100,40 +124,42 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
   return (
     <>
       <div className="space-y-4 rounded-[26px] border border-border/70 bg-card/85 p-4 shadow-sm">
-        <div className="flex flex-col gap-3 rounded-[22px] border border-border/60 bg-background/70 p-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-sm font-semibold">Toplu islemler</p>
-            <p className="text-sm text-muted-foreground">Bu sayfada {selectedIds.length} kullanici secili</p>
+        {canBulkUpdate ? (
+          <div className="flex flex-col gap-3 rounded-[22px] border border-border/60 bg-background/70 p-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm font-semibold">Toplu islemler</p>
+              <p className="text-sm text-muted-foreground">Bu sayfada {selectedIds.length} kullanici secili</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" disabled={isPending} onClick={() => runBulkAction("enable")}>
+                Aktif et
+              </Button>
+              <Button variant="outline" size="sm" disabled={isPending} onClick={() => runBulkAction("disable")}>
+                Pasif yap
+              </Button>
+              {isPending ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : null}
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" disabled={isPending} onClick={() => runBulkAction("enable")}>
-              Aktif et
-            </Button>
-            <Button variant="outline" size="sm" disabled={isPending} onClick={() => runBulkAction("disable")}>
-              Pasif yap
-            </Button>
-            <Button variant="outline" size="sm" disabled={isPending} onClick={() => runBulkAction("promoteAdmin")}>
-              Yonetici yap
-            </Button>
-            <Button variant="outline" size="sm" disabled={isPending} onClick={() => runBulkAction("demoteUser")}>
-              Kullanici yap
-            </Button>
-            {isPending ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : null}
+        ) : (
+          <div className="rounded-[22px] border border-border/60 bg-background/70 p-4 text-sm text-muted-foreground">
+            Bu rolde toplu kullanici mutasyonu kapali. Listeleme, detay ve audit kisayollari acik kalir.
           </div>
-        </div>
+        )}
 
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12">
-                <input
-                  type="checkbox"
-                  checked={allSelected}
-                  onChange={toggleAll}
-                  aria-label="Tum kullanicilari sec"
-                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                />
-              </TableHead>
+              {canBulkUpdate ? (
+                <TableHead className="w-12">
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={toggleAll}
+                    aria-label="Tum kullanicilari sec"
+                    className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                  />
+                </TableHead>
+              ) : null}
               <TableHead>E-posta</TableHead>
               <TableHead>Rol</TableHead>
               <TableHead>Durum</TableHead>
@@ -145,15 +171,17 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="w-12">
-                  <input
-                    type="checkbox"
-                    checked={selectedIds.includes(user.id)}
-                    onChange={() => toggleSelection(user.id)}
-                    aria-label={`${user.email} kullanicisini sec`}
-                    className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                  />
-                </TableCell>
+                {canBulkUpdate ? (
+                  <TableCell className="w-12">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(user.id)}
+                      onChange={() => toggleSelection(user.id)}
+                      aria-label={`${user.email} kullanicisini sec`}
+                      className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                    />
+                  </TableCell>
+                ) : null}
                 <TableCell>
                   <div className="space-y-1">
                     <p className="font-medium text-foreground">{user.email}</p>
@@ -161,7 +189,7 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={user.role === "ADMIN" ? "default" : "secondary"}>
+                  <Badge variant={user.role === "USER" ? "secondary" : "default"}>
                     {formatAdminRole(user.role)}
                   </Badge>
                 </TableCell>
@@ -210,7 +238,7 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
                 <div className="rounded-[24px] border border-border/70 bg-card/80 p-5">
                   <div className="flex items-center gap-3">
                     <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                      {previewUser.role === "ADMIN" ? <Shield className="h-5 w-5" /> : <UserCog className="h-5 w-5" />}
+                      {previewUser.role === "USER" ? <UserCog className="h-5 w-5" /> : <Shield className="h-5 w-5" />}
                     </span>
                     <div>
                       <p className="text-sm font-semibold">{previewUser.name}</p>

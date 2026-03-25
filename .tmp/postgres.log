@@ -400,3 +400,12 @@
 2026-03-20 23:04:45.973 +03 [108356] LOG:  could not receive data from client: unrecognized winsock error 10054
 2026-03-20 23:04:45.973 +03 [160744] LOG:  could not receive data from client: unrecognized winsock error 10054
 2026-03-20 23:04:45.973 +03 [177428] LOG:  could not receive data from client: unrecognized winsock error 10054
+2026-03-21 00:07:27.661 +03 [53884] LOG:  server process (PID 152356) was terminated by exception 0x40010004
+2026-03-21 00:07:27.661 +03 [53884] DETAIL:  Failed process was running: SELECT "public"."RecurringRule"."id", "public"."RecurringRule"."name", "public"."RecurringRule"."type", "public"."RecurringRule"."amount", "public"."RecurringRule"."description", "public"."RecurringRule"."frequency"::text, "public"."RecurringRule"."customMonthDay", "public"."RecurringRule"."startsAt", "public"."RecurringRule"."endsAt", "public"."RecurringRule"."isActive", "public"."RecurringRule"."isSubscription", "public"."RecurringRule"."reminderDaysBefore", "public"."RecurringRule"."categoryId", "public"."RecurringRule"."userId", "public"."RecurringRule"."createdAt", "public"."RecurringRule"."updatedAt" FROM "public"."RecurringRule" WHERE "public"."RecurringRule"."userId" = $1 ORDER BY "public"."RecurringRule"."isActive" DESC, "public"."RecurringRule"."createdAt" DESC OFFSET $2
+2026-03-21 00:07:27.661 +03 [53884] HINT:  See C include file "ntstatus.h" for a description of the hexadecimal value.
+2026-03-21 00:07:27.661 +03 [53884] LOG:  terminating any other active server processes
+2026-03-21 00:07:27.682 +03 [53884] LOG:  all server processes terminated; reinitializing
+2026-03-21 00:07:27.728 +03 [53884] LOG:  startup process (PID 151816) was terminated by exception 0xC000026B
+2026-03-21 00:07:27.728 +03 [53884] HINT:  See C include file "ntstatus.h" for a description of the hexadecimal value.
+2026-03-21 00:07:27.728 +03 [53884] LOG:  aborting startup due to startup process failure
+2026-03-21 00:07:27.730 +03 [53884] LOG:  database system is shut down

@@ -7,6 +7,7 @@ import { AdminPagination } from "@/components/admin/admin-pagination"
 import { AdminSavedViewsBar } from "@/components/admin/admin-saved-views-bar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { requireAdminPageSession } from "@/lib/admin/auth"
 import { getSingleSearchParam } from "@/lib/admin/query"
 import { getAdminActivityData, getAdminDefaultSavedView, getAdminSavedViews } from "@/lib/admin/data"
 import { adminActivityFiltersSchema } from "@/lib/validations"
@@ -25,6 +26,15 @@ const eventOptions = [
   { value: "SAVED_VIEW_CREATED", label: "Gorunum olustu" },
   { value: "SAVED_VIEW_UPDATED", label: "Gorunum guncellendi" },
   { value: "SAVED_VIEW_DELETED", label: "Gorunum silindi" },
+  { value: "APPROVAL_REQUESTED", label: "Onay istendi" },
+  { value: "APPROVAL_APPROVED", label: "Onaylandi" },
+  { value: "APPROVAL_REJECTED", label: "Onay reddi" },
+  { value: "USER_NOTE_CREATED", label: "Internal not" },
+  { value: "USER_SESSIONS_REVOKED", label: "Oturum kapatma" },
+  { value: "RAW_EXPORT_REQUESTED", label: "Ham export istegi" },
+  { value: "RAW_EXPORT_DOWNLOADED", label: "Ham export indirildi" },
+  { value: "FINANCE_REMINDER_JOB_SUCCEEDED", label: "Finance job basarili" },
+  { value: "FINANCE_REMINDER_JOB_FAILED", label: "Finance job hatasi" },
 ] as const
 
 export default async function AdminActivityPage({
@@ -32,6 +42,7 @@ export default async function AdminActivityPage({
 }: {
   searchParams: SearchParams
 }) {
+  const { admin } = await requireAdminPageSession("activity:view")
   const resolvedSearchParams = await searchParams
   const hasExplicitFilters = Boolean(
     getSingleSearchParam(resolvedSearchParams.event) ||
@@ -63,7 +74,7 @@ export default async function AdminActivityPage({
 
   const [data, savedViews] = await Promise.all([
     getAdminActivityData(filters),
-    getAdminSavedViews("ACTIVITY"),
+    getAdminSavedViews("ACTIVITY", admin.role),
   ])
 
   const currentQuery = new URLSearchParams({

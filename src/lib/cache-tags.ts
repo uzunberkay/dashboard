@@ -15,4 +15,6 @@ export const CACHE_TAGS = {
   activityLogs: "activity-logs-data",
   adminActivity: "admin-activity-data",
   adminSavedViews: "admin-saved-views-data",
+  adminApprovals: "admin-approvals-data",
+  adminUserNotes: "admin-user-notes-data",
 } as const

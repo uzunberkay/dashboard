@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { usePathname } from "next/navigation"
 import { Shield, ArrowLeftRight, LayoutDashboard, PiggyBank, Tags, Wallet, X } from "lucide-react"
+import { hasAdminAccess } from "@/lib/admin/permissions"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -23,7 +24,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { data: session } = useSession()
   const navigation =
-    session?.user?.role === "ADMIN"
+    hasAdminAccess(session?.user?.role)
       ? [...baseNavigation, { name: "Admin", href: "/admin", icon: Shield }]
       : baseNavigation
 
