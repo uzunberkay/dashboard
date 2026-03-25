@@ -36,3 +36,7 @@ Creating turbopack project { dir: 'D:\\tuna', testMode: true }
  GET /api/monthly-reports 200 in 125ms (compile: 102ms, proxy.ts: 3ms, render: 20ms)
  GET /api/goals/summary?year=2026 200 in 142ms (compile: 58ms, proxy.ts: 10ms, render: 74ms)
  GET /api/goals?year=2026&month=3 200 in 145ms (compile: 86ms, proxy.ts: 12ms, render: 47ms)
+ GET /api/auth/session 200 in 75ms (compile: 12ms, proxy.ts: 5ms, render: 58ms)
+ GET / 200 in 149ms (compile: 3ms, proxy.ts: 3ms, render: 142ms)
+ GET /api/auth/session 200 in 100ms (compile: 16ms, proxy.ts: 4ms, render: 79ms)
+ GET /api/auth/session 200 in 57ms (compile: 20ms, proxy.ts: 6ms, render: 32ms)
