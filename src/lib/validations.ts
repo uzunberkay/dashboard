@@ -31,13 +31,13 @@ const adminActivityEventSchema = z.enum([
 ])
 
 export const loginSchema = z.object({
-  email: z.string().email("Gecerli bir e-posta adresi giriniz"),
+  email: z.string().trim().toLowerCase().email("Gecerli bir e-posta adresi giriniz"),
   password: z.string().min(6, "Sifre en az 6 karakter olmalidir"),
 })
 
 export const registerSchema = z.object({
   name: z.string().min(2, "Isim en az 2 karakter olmalidir"),
-  email: z.string().email("Gecerli bir e-posta adresi giriniz"),
+  email: z.string().trim().toLowerCase().email("Gecerli bir e-posta adresi giriniz"),
   password: z.string().min(6, "Sifre en az 6 karakter olmalidir"),
 })
 

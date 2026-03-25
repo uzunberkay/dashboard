@@ -38,8 +38,10 @@ export const authOptions: NextAuthOptions = {
           throw new Error("E-posta ve sifre gereklidir")
         }
 
+        const normalizedEmail = credentials.email.trim().toLowerCase()
+
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: normalizedEmail },
         })
 
         if (!user) {
