@@ -40,3 +40,4 @@ Creating turbopack project { dir: 'D:\\tuna', testMode: true }
  GET / 200 in 149ms (compile: 3ms, proxy.ts: 3ms, render: 142ms)
  GET /api/auth/session 200 in 100ms (compile: 16ms, proxy.ts: 4ms, render: 79ms)
  GET /api/auth/session 200 in 57ms (compile: 20ms, proxy.ts: 6ms, render: 32ms)
+ GET /api/auth/session 200 in 138ms (compile: 18ms, proxy.ts: 7ms, render: 114ms)
